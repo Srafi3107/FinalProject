@@ -20,6 +20,62 @@ const Home = () => {
     navigate(`/listings${queryString ? `?${queryString}` : ''}`);
   };
 
+  const steps = [
+    {
+      number: '01',
+      title: 'Set Habits & Budget',
+      desc: 'Define your budget, preferred Dhaka neighborhood, and lifestyle habits (smoking, sleep hours, cleanliness 1-5, cooking).'
+    },
+    {
+      number: '02',
+      title: 'AI Matches You',
+      desc: 'Our Weighted Cosine Similarity & KNN algorithms score compatible roommates and rank suitable apartments with clear reasons.'
+    },
+    {
+      number: '03',
+      title: 'Schedule Free Visits',
+      desc: 'Connect with verified owners directly. Book in-person visits without paying any broker fees or middleman charges.'
+    },
+    {
+      number: '04',
+      title: 'Split Rent & Settle',
+      desc: 'Pair up with matched roommates, use the built-in Rent Split Calculator for utilities, and find shared 2+ bedroom flats.'
+    }
+  ];
+
+  const features = [
+    {
+      icon: '🧠',
+      title: 'Weighted AI Roommate Matching',
+      desc: 'Scientific lifestyle matching based on smoking (30%), cleanliness (25%), sleep time (20%), budget (15%), and cooking habits (10%).'
+    },
+    {
+      icon: '📊',
+      title: 'Scraped Dhaka Market Dashboard',
+      desc: 'Real-time rent analytics scraped from Bikroy, bdHousing, and Rents.com.bd. Compare average rents by area and bedrooms.'
+    },
+    {
+      icon: '🛡️',
+      title: 'Overpriced Rent Warning',
+      desc: 'Machine learning Random Forest model predicts fair market rent and alerts you if a listing is overpriced by over 25%.'
+    },
+    {
+      icon: '👥',
+      title: 'Shared Houses for Pairs',
+      desc: 'Matched roommates can merge their budgets and common area preferences to find 2+ room apartments together automatically.'
+    },
+    {
+      icon: '🧮',
+      title: 'Smart Rent Split Calculator',
+      desc: 'Easily divide base rent, gas, electricity, service charge, and WiFi costs between flatmates with complete transparency.'
+    },
+    {
+      icon: '✅',
+      title: 'NID & Student ID Verification',
+      desc: 'Upload university student ID or NID to earn a Verified badge, boosting trust for bachelors, female students, and landlords.'
+    }
+  ];
+
   return (
     <div className="home-page">
       {/* ================= HERO SECTION ================= */}
@@ -163,6 +219,74 @@ const Home = () => {
           <div className="stat-card">
             <span className="stat-number">Real-Time</span>
             <span className="stat-label">Scraped Dhaka Rent Market Intelligence</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= HOW IT WORKS SECTION ================= */}
+      <section className="section-padding how-it-works-section">
+        <div className="container">
+          <div className="section-header text-center">
+            <span className="badge badge-primary">Step-by-Step Flow</span>
+            <h2 className="section-title">How HomeMatch Works</h2>
+            <p className="section-subtitle">
+              From finding compatible flatmates to verifying property owners, your Dhaka housing journey is simple and safe.
+            </p>
+          </div>
+
+          <div className="steps-grid">
+            {steps.map((step, idx) => (
+              <div key={idx} className="step-card">
+                <div className="step-number-pill">{step.number}</div>
+                <h3 className="step-title">{step.title}</h3>
+                <p className="step-desc">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= FEATURES SECTION ================= */}
+      <section className="section-padding features-section">
+        <div className="container">
+          <div className="section-header text-center">
+            <span className="badge badge-secondary">Built for Dhaka</span>
+            <h2 className="section-title">AI-Powered Features for Urban Housing</h2>
+            <p className="section-subtitle">
+              Smart tools built to eliminate pain points faced by students, bachelors, and landlords across Dhaka.
+            </p>
+          </div>
+
+          <div className="features-grid">
+            {features.map((feature, idx) => (
+              <div key={idx} className="feature-card">
+                <div className="feature-icon-wrapper">{feature.icon}</div>
+                <h3 className="feature-title">{feature.title}</h3>
+                <p className="feature-desc">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CALL TO ACTION BANNER ================= */}
+      <section className="cta-section">
+        <div className="container">
+          <div className="cta-card">
+            <div className="cta-content">
+              <h2>Ready to Find Your Home or Roommate in Dhaka?</h2>
+              <p>
+                Join hundreds of university students, job holders, and property owners in Mirpur, Dhanmondi, Uttara, and across Dhaka.
+              </p>
+            </div>
+            <div className="cta-buttons">
+              <Link to="/register" className="btn btn-secondary btn-lg">
+                Create Free Account
+              </Link>
+              <Link to="/listings" className="btn btn-outline-white btn-lg">
+                Explore Listings
+              </Link>
+            </div>
           </div>
         </div>
       </section>
