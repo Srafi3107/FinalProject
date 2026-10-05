@@ -1,0 +1,136 @@
+.not-found-page {
+  min-height: calc(100vh - var(--navbar-height) - 100px);
+  background: linear-gradient(180deg, #f0fdfa 0%, var(--bg-app) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+}
+
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.not-found-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 3.5rem 2.5rem;
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.not-found-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.not-found-error-code {
+  font-size: 6.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--primary-muted);
+  letter-spacing: -0.05em;
+  user-select: none;
+}
+
+.not-found-icon {
+  position: absolute;
+  font-size: 3rem;
+  transform: translateY(4px);
+}
+
+.not-found-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.not-found-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 480px;
+  margin-bottom: 2rem;
+}
+
+.not-found-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.popular-dhaka-areas {
+  width: 100%;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.areas-heading {
+  display: block;
+  font-size: 0.825rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.areas-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.area-pill {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: var(--bg-subtle);
+  color: var(--text-body);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-fast);
+}
+
+.area-pill:hover {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .not-found-card {
+    padding: 2.5rem 1.25rem;
+  }
+  .not-found-error-code {
+    font-size: 5rem;
+  }
+  .not-found-title {
+    font-size: 1.5rem;
+  }
+  .not-found-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .not-found-actions .btn {
+    width: 100%;
+  }
+}
