@@ -1,0 +1,262 @@
+/* ==========================================================================
+   ListingCard Component Styling
+   Card layout with hover animations, badges, and responsive Dhaka specs
+   ========================================================================== */
+
+.listing-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.listing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-muted);
+}
+
+/* Image Container */
+.listing-img-box {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: var(--bg-subtle);
+  overflow: hidden;
+}
+
+.listing-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base);
+}
+
+.listing-card:hover .listing-img {
+  transform: scale(1.04);
+}
+
+.listing-img-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  gap: 0.5rem;
+}
+
+.placeholder-icon {
+  font-size: 2.25rem;
+}
+
+.placeholder-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Badges on Image */
+.listing-badges-top {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.badge-area {
+  background-color: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+}
+
+.badge-type {
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-bachelor {
+  background-color: var(--secondary);
+  color: #ffffff;
+}
+
+.badge-family {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.verified-badge-pill {
+  position: absolute;
+  bottom: 0.65rem;
+  left: 0.75rem;
+  background-color: rgba(16, 185, 129, 0.95);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.check-icon {
+  font-weight: 900;
+}
+
+/* Body Content */
+.listing-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Price & Rating */
+.listing-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.price-tag {
+  display: flex;
+  align-items: baseline;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.price-tag .currency {
+  font-size: 1.1rem;
+  margin-right: 2px;
+}
+
+.price-tag .amount {
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+.price-tag .period {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.listing-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #b45309;
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+}
+
+.listing-rating .star {
+  color: #f59e0b;
+}
+
+/* Title */
+.listing-title {
+  font-size: 1.025rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.35;
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.listing-title a {
+  color: var(--text-main);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.listing-title a:hover {
+  color: var(--primary);
+}
+
+/* Specs */
+.listing-specs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+  color: var(--text-body);
+  margin-bottom: 0.85rem;
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.spec-dot {
+  color: var(--border-color);
+}
+
+/* Amenities */
+.listing-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.amenity-pill {
+  font-size: 0.75rem;
+  background-color: var(--bg-subtle);
+  color: var(--text-muted);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.pill-gender {
+  background-color: #fef3c7;
+  color: #92400e;
+  font-weight: 600;
+}
+
+/* Footer & Button */
+.listing-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.view-details-btn {
+  width: 100%;
+  text-align: center;
+}

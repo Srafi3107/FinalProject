@@ -1,5 +1,5 @@
-// HomeMatch mock data placeholder
-// Full realistic Dhaka listings and roommate profiles will be populated on Day 3
+// HomeMatch Mock Data — Realistic Dhaka Urban Housing Dataset
+// Areas: Mirpur, Dhanmondi, Uttara, Mohammadpur, Banani, Gulshan, Bashundhara, Badda, Rampura, Motijheel
 
 export const DHAKA_AREAS = [
   'Mirpur',
@@ -14,5 +14,358 @@ export const DHAKA_AREAS = [
   'Motijheel'
 ];
 
-export const mockListings = [];
+export const mockListings = [
+  {
+    id: 1,
+    title: 'Sunny 3-Bed Family/Bachelor Flat near Metro Station',
+    area: 'Mirpur',
+    address: 'Mirpur-12, Block-C, Near MRT Line-6 Station',
+    rent: 22000,
+    bedrooms: 3,
+    bathrooms: 2,
+    size: 1250,
+    furnished: 'Semi-Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: true,
+    hasGenerator: true,
+    tenantType: ['bachelor', 'family', 'job_holder'],
+    genderAllowed: 'any',
+    isAvailable: true,
+    rating: 4.8,
+    reviewsCount: 14,
+    images: [
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Spacious 3-bedroom apartment with great cross-ventilation and natural daylight. Walking distance to Mirpur-12 Metro Rail Station. 24/7 gas supply and dedicated elevator.',
+    owner: {
+      id: 101,
+      name: 'Engr. Mofazzal Hossain',
+      phone: '01711223344',
+      isVerified: true,
+      memberSince: 'March 2024'
+    },
+    depositMonths: 2,
+    serviceCharge: 3500,
+    createdAt: '2026-09-28'
+  },
+  {
+    id: 2,
+    title: 'Furnished Bachelor Room Sublet with Attached Balcony',
+    area: 'Dhanmondi',
+    address: 'Road 9/A, Near State University & Star Kabab',
+    rent: 9500,
+    bedrooms: 1,
+    bathrooms: 1,
+    size: 260,
+    furnished: 'Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: false,
+    hasGenerator: false,
+    tenantType: ['bachelor', 'student', 'job_holder'],
+    genderAllowed: 'male',
+    isAvailable: true,
+    rating: 4.9,
+    reviewsCount: 8,
+    images: [
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Single bachelor room for university student or job holder. Includes single bed, study table, ceiling fan, and high-speed fiber WiFi. Cooking facility available in shared kitchen.',
+    owner: {
+      id: 102,
+      name: 'Kamrul Hasan',
+      phone: '01819876543',
+      isVerified: true,
+      memberSince: 'January 2024'
+    },
+    depositMonths: 1,
+    serviceCharge: 1200,
+    createdAt: '2026-10-01'
+  },
+  {
+    id: 3,
+    title: 'Modern 2-Bed Apartment with Lift & Full Generator',
+    area: 'Uttara',
+    address: 'Sector 11, Road 18, Uttara Model Town',
+    rent: 28000,
+    bedrooms: 2,
+    bathrooms: 2,
+    size: 1100,
+    furnished: 'Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: true,
+    hasGenerator: true,
+    tenantType: ['family', 'job_holder'],
+    genderAllowed: 'any',
+    isAvailable: true,
+    rating: 4.7,
+    reviewsCount: 19,
+    images: [
+      'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Modern European style finished apartment in peaceful Sector 11. Fully secured building with CCTV surveillance, card access lift, and full load generator backup.',
+    owner: {
+      id: 103,
+      name: 'Begum Shamsunnahar',
+      phone: '01912345678',
+      isVerified: true,
+      memberSince: 'May 2023'
+    },
+    depositMonths: 2,
+    serviceCharge: 4000,
+    createdAt: '2026-09-15'
+  },
+  {
+    id: 4,
+    title: 'Female Student Sublet Seat near NSU & IUB',
+    area: 'Bashundhara',
+    address: 'Block-D, Road 4, Walking distance to NSU Campus',
+    rent: 7500,
+    bedrooms: 1,
+    bathrooms: 1,
+    size: 220,
+    furnished: 'Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: true,
+    hasGenerator: true,
+    tenantType: ['student'],
+    genderAllowed: 'female',
+    isAvailable: true,
+    rating: 5.0,
+    reviewsCount: 11,
+    images: [
+      'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Exclusive seat for female university students (NSU/IUB/AIUB). 24/7 security guard, biometric entry, shared refrigerator, microwave, and high-speed internet.',
+    owner: {
+      id: 104,
+      name: 'Farhana Akhter',
+      phone: '01671122334',
+      isVerified: true,
+      memberSince: 'August 2024'
+    },
+    depositMonths: 1,
+    serviceCharge: 1500,
+    createdAt: '2026-10-02'
+  },
+  {
+    id: 5,
+    title: 'Spacious 4-Bed Luxury Flat in Prime Banani',
+    area: 'Banani',
+    address: 'Road 11, Block-F, Banani Diplomatic Area',
+    rent: 55000,
+    bedrooms: 4,
+    bathrooms: 4,
+    size: 2250,
+    furnished: 'Semi-Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: true,
+    hasGenerator: true,
+    tenantType: ['family', 'job_holder'],
+    genderAllowed: 'any',
+    isAvailable: true,
+    rating: 4.9,
+    reviewsCount: 22,
+    images: [
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Luxury flat with Italian marble tiles, dedicated parking slots, servant room with attached bath, intercom system, and close proximity to Kemal Ataturk Avenue.',
+    owner: {
+      id: 105,
+      name: 'Barrister Rafiqul Islam',
+      phone: '01715566778',
+      isVerified: true,
+      memberSince: 'November 2023'
+    },
+    depositMonths: 3,
+    serviceCharge: 6500,
+    createdAt: '2026-09-20'
+  },
+  {
+    id: 6,
+    title: 'Affordable 2-Bed Bachelor Mess Flat',
+    area: 'Mohammadpur',
+    address: 'Katasur, Near Mohammadpur Bus Stand',
+    rent: 16000,
+    bedrooms: 2,
+    bathrooms: 2,
+    size: 850,
+    furnished: 'Unfurnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: false,
+    hasGenerator: false,
+    tenantType: ['bachelor', 'student'],
+    genderAllowed: 'male',
+    isAvailable: true,
+    rating: 4.3,
+    reviewsCount: 6,
+    images: [
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Budget-friendly 2-bedroom flat ideal for 3-4 bachelor students or entry-level job holders. Line gas available. Very accessible to Mohammadpur and Ring Road.',
+    owner: {
+      id: 106,
+      name: 'Abdul Malek',
+      phone: '01815544332',
+      isVerified: false,
+      memberSince: 'June 2024'
+    },
+    depositMonths: 2,
+    serviceCharge: 1800,
+    createdAt: '2026-09-25'
+  },
+  {
+    id: 7,
+    title: 'Executive Studio Flat with Lake View',
+    area: 'Gulshan',
+    address: 'Gulshan-1, Road 23, Near Hatirjheel Link',
+    rent: 38000,
+    bedrooms: 1,
+    bathrooms: 1,
+    size: 650,
+    furnished: 'Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: true,
+    hasGenerator: true,
+    tenantType: ['bachelor', 'job_holder'],
+    genderAllowed: 'any',
+    isAvailable: true,
+    rating: 4.9,
+    reviewsCount: 15,
+    images: [
+      'https://images.unsplash.com/photo-1502005229762-ee152478170c?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Modern designer studio with panoramic lake views. Smart home lighting, AC included, modular kitchenette, and 24-hour concierge service. Great for corporate executives.',
+    owner: {
+      id: 107,
+      name: 'Shahidul Alam',
+      phone: '01718899001',
+      isVerified: true,
+      memberSince: 'December 2023'
+    },
+    depositMonths: 2,
+    serviceCharge: 5000,
+    createdAt: '2026-10-03'
+  },
+  {
+    id: 8,
+    title: 'Quiet 3-Bed Family Flat with Balcony Garden',
+    area: 'Rampura',
+    address: 'Banasree, Block-E, Road 6',
+    rent: 23000,
+    bedrooms: 3,
+    bathrooms: 3,
+    size: 1350,
+    furnished: 'Unfurnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: true,
+    hasGenerator: false,
+    tenantType: ['family'],
+    genderAllowed: 'any',
+    isAvailable: true,
+    rating: 4.6,
+    reviewsCount: 9,
+    images: [
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Calm residential location in Banasree. Broad roads, 2 south-facing balconies, wide drawing-dining space. Pipeline Titas gas and round-the-clock water supply.',
+    owner: {
+      id: 108,
+      name: 'Dr. Nurul Huda',
+      phone: '01917766554',
+      isVerified: true,
+      memberSince: 'February 2024'
+    },
+    depositMonths: 2,
+    serviceCharge: 3000,
+    createdAt: '2026-09-18'
+  },
+  {
+    id: 9,
+    title: 'Bachelor Sublet Room near Canadian University',
+    area: 'Badda',
+    address: 'Middle Badda, Near Pragati Sarani',
+    rent: 8000,
+    bedrooms: 1,
+    bathrooms: 1,
+    size: 210,
+    furnished: 'Semi-Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: false,
+    hasGenerator: false,
+    tenantType: ['bachelor', 'student'],
+    genderAllowed: 'male',
+    isAvailable: true,
+    rating: 4.2,
+    reviewsCount: 5,
+    images: [
+      'https://images.unsplash.com/photo-1540518614846-7ede433c4ef0?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Convenient sublet room for students or office workers. Quick bus access along Pragati Sarani connecting Rampura, Kuril, and Notun Bazar.',
+    owner: {
+      id: 109,
+      name: 'Zahid Hasan',
+      phone: '01814433221',
+      isVerified: false,
+      memberSince: 'July 2024'
+    },
+    depositMonths: 1,
+    serviceCharge: 1000,
+    createdAt: '2026-09-29'
+  },
+  {
+    id: 10,
+    title: 'Corporate 3-Bed Flat near Commercial Hub',
+    area: 'Motijheel',
+    address: 'Near Dilkusha & Shapla Chottor',
+    rent: 32000,
+    bedrooms: 3,
+    bathrooms: 2,
+    size: 1400,
+    furnished: 'Furnished',
+    hasWifi: true,
+    hasGas: true,
+    hasLift: true,
+    hasGenerator: true,
+    tenantType: ['family', 'job_holder'],
+    genderAllowed: 'any',
+    isAvailable: true,
+    rating: 4.5,
+    reviewsCount: 12,
+    images: [
+      'https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Ideal residence for bank officers and commercial professionals working in Motijheel and Dilkusha. 5 minutes from Motijheel Metro station.',
+    owner: {
+      id: 110,
+      name: 'Mustafizur Rahman',
+      phone: '01713322110',
+      isVerified: true,
+      memberSince: 'April 2024'
+    },
+    depositMonths: 2,
+    serviceCharge: 4500,
+    createdAt: '2026-09-22'
+  }
+];
+
+// Roommate profiles placeholder (will be expanded on Day 4)
 export const mockRoommates = [];
