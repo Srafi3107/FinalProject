@@ -11,6 +11,8 @@ import Roommates from './pages/Roommates';
 import MarketDashboard from './pages/MarketDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import TenantDashboard from './pages/TenantDashboard';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -23,10 +25,11 @@ function App() {
           <Route path="/listings/:id" element={<ListingDetails />} />
           <Route path="/roommates" element={<Roommates />} />
           <Route path="/market" element={<MarketDashboard />} />
+          <Route path="/dashboard" element={<TenantDashboard />} />
+          <Route path="/profile" element={<TenantDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Fallback to home until Day 2 dedicated 404 page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />

@@ -78,6 +78,13 @@ const Navbar = () => {
             >
               Market Trends
             </NavLink>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              Dashboard
+            </NavLink>
           </div>
 
           <div className="nav-actions">
