@@ -1,0 +1,207 @@
+/* ==========================================================================
+   Find Roommates Page Styling
+   Algorithm banner, filter controls bar, roommate cards grid, empty state
+   ========================================================================== */
+
+.roommates-page {
+  background-color: var(--bg-app);
+  min-height: calc(100vh - var(--navbar-height));
+  padding-bottom: 5rem;
+}
+
+/* Hero Section */
+.roommates-hero {
+  background: linear-gradient(180deg, #fff7ed 0%, var(--bg-app) 100%);
+  padding: 3rem 0 2rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.roommates-hero-content {
+  max-width: 780px;
+}
+
+.roommates-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.roommates-sub {
+  font-size: 1.05rem;
+  color: var(--text-body);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.algorithm-weights-badge {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.weight-item {
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-color: #ffffff;
+  border: 1px solid #fed7aa;
+  color: #c2410c;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Content Layout */
+.roommates-content-layout {
+  margin-top: 2rem;
+}
+
+/* Filter Controls Bar */
+.roommates-filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-item-search {
+  flex: 1;
+  min-width: 260px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filter-item-search .search-icon {
+  position: absolute;
+  left: 0.85rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.roommate-search-input {
+  width: 100%;
+  padding: 0.65rem 2rem 0.65rem 2.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.925rem;
+  color: var(--text-main);
+  background-color: var(--bg-surface);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.roommate-search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+}
+
+.clear-btn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.filter-select-input {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  font-size: 0.875rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.filter-select-input:focus {
+  border-color: var(--primary);
+}
+
+.reset-all-btn {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Results Header */
+.roommates-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding: 0 0.25rem;
+}
+
+.results-count-text {
+  font-size: 0.925rem;
+  color: var(--text-muted);
+}
+
+.results-count-text strong {
+  color: var(--text-main);
+}
+
+/* Roommates Grid */
+.roommates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+}
+
+/* Empty State */
+.roommates-empty-card {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 580px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.roommates-empty-card h3 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.roommates-empty-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .roommates-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .roommates-filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-select-input {
+    width: 100%;
+  }
+  .roommates-title {
+    font-size: 1.75rem;
+  }
+}

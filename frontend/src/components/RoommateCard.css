@@ -1,0 +1,310 @@
+/* ==========================================================================
+   RoommateCard Component Styling
+   AI match badge, Dhaka university info, lifestyle chips, and request CTA
+   ========================================================================== */
+
+.roommate-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.roommate-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-muted);
+}
+
+/* Header */
+.roommate-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.roommate-avatar-box {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.roommate-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-muted);
+}
+
+.roommate-verify-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background-color: var(--success);
+  color: #ffffff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.roommate-title-meta {
+  flex: 1;
+}
+
+.name-age-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+
+.roommate-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.roommate-age {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.gender-badge {
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.gender-badge.male {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.gender-badge.female {
+  background-color: #fdf2f8;
+  color: #be185d;
+}
+
+.roommate-occupation {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0 0 0.15rem 0;
+}
+
+.roommate-institution {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+/* AI Score Badge */
+.roommate-ai-badge {
+  background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
+  color: #ffffff;
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(var(--primary-rgb), 0.25);
+  flex-shrink: 0;
+}
+
+.score-percent {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+  font-weight: 700;
+}
+
+/* Locations & Budget */
+.roommate-location-budget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: var(--bg-subtle);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.meta-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.areas-pill-list {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.area-badge-chip {
+  font-size: 0.775rem;
+  font-weight: 700;
+  color: var(--text-main);
+  background-color: #ffffff;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.budget-item {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.budget-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.budget-value small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Lifestyle Chips */
+.roommate-lifestyle-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.trait-chip {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-body);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+}
+
+/* AI Reasons Box */
+.roommate-reasons-container {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.reasons-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #166534;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+}
+
+.reasons-bullet-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0;
+  margin: 0;
+}
+
+.reason-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.825rem;
+  color: #15803d;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.bullet-check {
+  font-weight: 900;
+}
+
+/* Bio Drawer */
+.roommate-bio-drawer {
+  background-color: var(--bg-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.bio-drawer-text {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-body);
+  margin: 0;
+}
+
+/* Footer Actions */
+.roommate-card-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.btn-bio-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-bio-toggle:hover {
+  color: var(--text-main);
+  text-decoration: underline;
+}
+
+.roommate-request-btn {
+  font-weight: 700;
+}
+
+.btn-success {
+  background-color: var(--success);
+  color: #ffffff;
+  border: none;
+}

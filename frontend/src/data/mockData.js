@@ -367,5 +367,190 @@ export const mockListings = [
   }
 ];
 
-// Roommate profiles placeholder (will be expanded on Day 4)
-export const mockRoommates = [];
+// Current Demo Tenant User Profile
+export const defaultTenantProfile = {
+  id: 1,
+  name: 'Tanvir Ahmed',
+  email: 'tanvir@homematch.bd',
+  phone: '01712345678',
+  role: 'tenant',
+  isVerified: true,
+  university: 'North South University (NSU)',
+  occupation: 'Undergrad Student (Computer Science)',
+  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
+  bio: 'CS student at NSU. Very neat and organized. Looking for quiet roommates in Mirpur or Dhanmondi who respect sleep schedules.',
+  // Housing Needs
+  housingPreferences: {
+    targetBudget: 15000,
+    preferredAreas: ['Mirpur', 'Dhanmondi', 'Mohammadpur'],
+    roomType: 'bachelor', // 'flat', 'bachelor', 'seat'
+    furnished: 'Furnished',
+    wifiRequired: true,
+    gasRequired: true,
+    liftRequired: true,
+    moveInDate: '2026-11-01'
+  },
+  // Lifestyle Habits (AI Features)
+  lifestyleHabits: {
+    smoking: 'non_smoker', // 'non_smoker', 'smoker', 'occasional'
+    cleanliness: 5, // 1 to 5 scale
+    sleepTime: 'normal', // 'early' (before 11pm), 'normal' (11pm-1am), 'night_owl' (after 1am)
+    cookingFrequency: 'daily', // 'none', 'occasional', 'daily'
+    guestsPolicy: 'weekends_only', // 'no_guests', 'weekends_only', 'flexible'
+    genderPreference: 'male' // 'male', 'female', 'any'
+  }
+};
+
+// Realistic Dhaka Roommate Candidates for AI Matching
+export const mockRoommates = [
+  {
+    id: 201,
+    name: 'Sazzad Hossain',
+    age: 23,
+    gender: 'male',
+    occupation: 'Student @ BRAC University',
+    institution: 'BRACU (CSE)',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
+    preferredAreas: ['Mirpur', 'Mohammadpur', 'Dhanmondi'],
+    budget: 12000,
+    isVerified: true,
+    bio: 'Coding enthusiast and final year student. Prefer a neat environment with minimal noise during exam weeks.',
+    // Lifestyle attributes
+    smoking: 'non_smoker',
+    cleanliness: 5,
+    sleepTime: 'normal',
+    cookingFrequency: 'occasional',
+    guestsPolicy: 'weekends_only',
+    // AI Match computation for defaultTenant
+    matchScore: 96,
+    reasons: [
+      'Both strict non-smokers (30% weight)',
+      'Identical cleanliness level: 5/5 (25% weight)',
+      'Both sleep between 11 PM - 1 AM (20% weight)',
+      'Compatible shared budget in Mirpur'
+    ]
+  },
+  {
+    id: 202,
+    name: 'Mahir Faisal',
+    age: 25,
+    gender: 'male',
+    occupation: 'Junior Software Engineer',
+    institution: 'Brain Station 23',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
+    preferredAreas: ['Mirpur', 'Banani', 'Uttara'],
+    budget: 16000,
+    isVerified: true,
+    bio: 'Full-stack developer working hybrid. Quiet, tidy, and cooks breakfast and dinner at home.',
+    smoking: 'non_smoker',
+    cleanliness: 4,
+    sleepTime: 'night_owl',
+    cookingFrequency: 'daily',
+    guestsPolicy: 'weekends_only',
+    matchScore: 89,
+    reasons: [
+      'Both non-smokers (30% weight)',
+      'High cleanliness alignment: 4/5 vs 5/5',
+      'Both cook at home regularly',
+      'Within similar Mirpur budget range'
+    ]
+  },
+  {
+    id: 203,
+    name: 'Anika Tabassum',
+    age: 22,
+    gender: 'female',
+    occupation: 'BBA Student @ NSU',
+    institution: 'North South University',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80',
+    preferredAreas: ['Bashundhara', 'Badda'],
+    budget: 10000,
+    isVerified: true,
+    bio: 'Studious 3rd year student. Non-smoker, early riser, loves keeping common spaces spick and span.',
+    smoking: 'non_smoker',
+    cleanliness: 5,
+    sleepTime: 'early',
+    cookingFrequency: 'daily',
+    guestsPolicy: 'no_guests',
+    matchScore: 92,
+    reasons: [
+      'Both non-smokers (30% weight)',
+      'Top cleanliness score: 5/5 (25% weight)',
+      'Compatible student living budget',
+      'Common preference for quiet study hours'
+    ]
+  },
+  {
+    id: 204,
+    name: 'Zubair Rahman',
+    age: 24,
+    gender: 'male',
+    occupation: 'Accounting Student @ Dhaka University',
+    institution: 'University of Dhaka',
+    avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=400&auto=format&fit=crop&q=80',
+    preferredAreas: ['Dhanmondi', 'Mohammadpur', 'Motijheel'],
+    budget: 9000,
+    isVerified: false,
+    bio: 'Passionate about sports and debate. Looking for shared room or flat sublet near Nilkhet/Dhanmondi.',
+    smoking: 'non_smoker',
+    cleanliness: 3,
+    sleepTime: 'normal',
+    cookingFrequency: 'none',
+    guestsPolicy: 'flexible',
+    matchScore: 78,
+    reasons: [
+      'Both non-smokers (30% weight)',
+      'Matching sleep schedule (11 PM - 1 AM)',
+      'Dhanmondi area overlap'
+    ]
+  },
+  {
+    id: 205,
+    name: 'Nusrat Jahan',
+    age: 24,
+    gender: 'female',
+    occupation: 'Digital Marketer',
+    institution: 'Agency @ Banani',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
+    preferredAreas: ['Banani', 'Gulshan', 'Bashundhara'],
+    budget: 18000,
+    isVerified: true,
+    bio: 'Working professional in advertising. Friendly, tidy, and loves sharing weekend cooking.',
+    smoking: 'non_smoker',
+    cleanliness: 4,
+    sleepTime: 'normal',
+    cookingFrequency: 'occasional',
+    guestsPolicy: 'weekends_only',
+    matchScore: 85,
+    reasons: [
+      'Both non-smokers (30% weight)',
+      'Cleanliness alignment: 4/5',
+      'Compatible peaceful weekend schedule'
+    ]
+  },
+  {
+    id: 206,
+    name: 'Rashedul Karim',
+    age: 26,
+    gender: 'male',
+    occupation: 'Bank Officer',
+    institution: 'City Bank Ltd',
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&auto=format&fit=crop&q=80',
+    preferredAreas: ['Motijheel', 'Rampura', 'Dhanmondi'],
+    budget: 14000,
+    isVerified: true,
+    bio: 'Corporate banker. Disciplined schedule, early sleeper, non-smoker, looking for clean apartment mate.',
+    smoking: 'non_smoker',
+    cleanliness: 4,
+    sleepTime: 'early',
+    cookingFrequency: 'none',
+    guestsPolicy: 'no_guests',
+    matchScore: 81,
+    reasons: [
+      'Both non-smokers (30% weight)',
+      'High cleanliness habit: 4/5',
+      'Dhanmondi area match'
+    ]
+  }
+];
+
