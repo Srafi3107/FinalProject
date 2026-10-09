@@ -85,6 +85,13 @@ const Navbar = () => {
             >
               Dashboard
             </NavLink>
+            <NavLink
+              to="/owner-dashboard"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              Owner Portal
+            </NavLink>
           </div>
 
           <div className="nav-actions">
