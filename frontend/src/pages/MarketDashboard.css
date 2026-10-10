@@ -1,0 +1,309 @@
+/* ==========================================================================
+   HomeMatch — Rent Market Trends Dashboard Styles
+   Supervisor Requirement: Real-world Dhaka Rental Market Visualization
+   ========================================================================== */
+
+.market-dashboard-page {
+  padding-bottom: var(--space-2xl);
+  background-color: var(--color-bg-alt);
+  min-height: calc(100vh - 72px);
+}
+
+/* Hero & Summary Header */
+.market-hero-section {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+  color: #ffffff;
+  padding: 3rem 0 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 2rem;
+}
+
+.market-header-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.market-title-area {
+  max-width: 800px;
+}
+
+.market-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #5eead4;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  border: 1px solid rgba(94, 234, 212, 0.25);
+}
+
+.market-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.market-subtitle {
+  color: #cbd5e1;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+/* 4 Summary Metric Cards */
+.market-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.market-summary-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform var(--transition-normal), background-color var(--transition-normal);
+}
+
+.market-summary-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.market-summary-card .summary-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+}
+
+.market-summary-card .summary-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.market-summary-card .summary-val {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.market-summary-card .summary-val.text-success {
+  color: #4ade80;
+}
+
+.market-summary-card .summary-val.text-primary {
+  color: #5eead4;
+}
+
+.market-summary-card .summary-lbl {
+  font-size: var(--font-size-xs);
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-top: 0.25rem;
+}
+
+/* Content Container */
+.market-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Filters Card */
+.market-filters-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.25rem 1.75rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-select-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-caption {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.market-select {
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.market-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+.scraped-date-tag {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg-alt);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-light);
+}
+
+/* Charts Grid Layout */
+.charts-grid-stack {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.chart-card {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition-normal);
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.chart-card.full-span {
+  grid-column: 1 / -1;
+}
+
+.grid-2.full-span {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.chart-title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.chart-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .market-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .charts-grid-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card.full-span,
+  .grid-2.full-span {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .market-hero-section {
+    padding: 2rem 0 1.75rem;
+  }
+
+  .market-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .market-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-2.full-span {
+    grid-template-columns: 1fr;
+  }
+
+  .market-filters-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .filter-select-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .market-select {
+    width: 100%;
+  }
+
+  .scraped-date-tag {
+    text-align: center;
+  }
+
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-canvas-container {
+    height: 240px !important;
+  }
+}
