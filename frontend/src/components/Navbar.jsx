@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useFavorites } from '../context/FavoritesContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { favoritesCount } = useFavorites();
 
   const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMenu = () => setMobileMenuOpen(false);
@@ -86,11 +88,25 @@ const Navbar = () => {
               Dashboard
             </NavLink>
             <NavLink
+              to="/favorites"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              Saved ❤️{favoritesCount > 0 && <span className="nav-badge-count">{favoritesCount}</span>}
+            </NavLink>
+            <NavLink
               to="/owner-dashboard"
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Owner Portal
+            </NavLink>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              Admin Portal
             </NavLink>
           </div>
 

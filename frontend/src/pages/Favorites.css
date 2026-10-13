@@ -1,0 +1,158 @@
+/* ==========================================================================
+   HomeMatch — Favorites Page Styles
+   Saved Dhaka property shortlist styling & empty state
+   ========================================================================== */
+
+.favorites-page {
+  padding-bottom: 3.5rem;
+  background-color: var(--bg-app);
+  min-height: calc(100vh - 72px);
+}
+
+.favorites-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0d9488 100%);
+  color: #ffffff;
+  padding: 3rem 0 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.favorites-hero-inner {
+  max-width: 700px;
+}
+
+.favorites-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0.5rem 0 0.35rem;
+}
+
+.favorites-subtitle {
+  color: #cbd5e1;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+.favorites-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.favorites-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.saved-count-pill {
+  font-size: var(--font-size-sm);
+  color: var(--text-body);
+}
+
+.saved-count-pill strong {
+  color: var(--primary);
+  font-size: var(--font-size-base);
+}
+
+.area-select-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.area-select {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  color: var(--text-main);
+  background-color: var(--bg-surface);
+  outline: none;
+  cursor: pointer;
+}
+
+.area-select:focus {
+  border-color: var(--primary);
+}
+
+.clear-all-btn {
+  color: var(--danger);
+  font-size: var(--font-size-xs);
+}
+
+.clear-all-btn:hover {
+  background-color: var(--danger-bg);
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Empty State Card */
+.favorites-empty-card {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 650px;
+  margin: 2rem auto;
+}
+
+.empty-heart-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.empty-heading {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.75rem;
+}
+
+.empty-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.empty-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .favorites-controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .controls-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .area-select {
+    width: 100%;
+  }
+}

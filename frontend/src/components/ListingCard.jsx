@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useFavorites } from '../context/FavoritesContext';
 import './ListingCard.css';
 
 const ListingCard = ({ listing }) => {
   const [imageError, setImageError] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   if (!listing) return null;
 
@@ -25,6 +27,8 @@ const ListingCard = ({ listing }) => {
     owner,
     rating
   } = listing;
+
+  const isFav = isFavorite(id);
 
   const displayImage = images && images.length > 0 && !imageError
     ? images[0]
@@ -50,6 +54,21 @@ const ListingCard = ({ listing }) => {
             <span className="placeholder-text">{area} Apartment</span>
           </div>
         )}
+
+        {/* Favorite Heart Button */}
+        <button
+          type="button"
+          className={`card-favorite-btn ${isFav ? 'is-fav' : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(id, title);
+          }}
+          aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
+          title={isFav ? 'Saved in favorites' : 'Save to favorites'}
+        >
+          {isFav ? '❤️' : '🤍'}
+        </button>
 
         {/* Top Badges */}
         <div className="listing-badges-top">
