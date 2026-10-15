@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { mockListings, DHAKA_AREAS } from '../data/mockData';
 import ListingCard from '../components/ListingCard';
 import FilterSidebar from '../components/FilterSidebar';
+import EmptyState from '../components/common/EmptyState';
 import './Listings.css';
 
 const Listings = () => {
@@ -304,21 +305,14 @@ const Listings = () => {
               ))}
             </div>
           ) : (
-            /* Empty State */
-            <div className="listings-empty-state">
-              <div className="empty-icon">🔍</div>
-              <h3>No matching Dhaka listings found</h3>
-              <p>
-                We couldn't find any apartments matching your selected filters. Try broadening your budget range, clearing specific amenities, or selecting All Dhaka.
-              </p>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleResetFilters}
-              >
-                Reset All Filters
-              </button>
-            </div>
+            /* Reusable Empty State */
+            <EmptyState
+              icon="🏚️"
+              title="No matching Dhaka listings found"
+              description="We couldn't find any apartments matching your selected filters. Try broadening your budget range, clearing specific amenities, or selecting All Dhaka."
+              actionText="Reset All Filters"
+              onAction={handleResetFilters}
+            />
           )}
         </main>
       </div>

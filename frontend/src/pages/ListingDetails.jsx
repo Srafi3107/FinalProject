@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { mockListings } from '../data/mockData';
+import { mockListings, mockReviews } from '../data/mockData';
 import ListingCard from '../components/ListingCard';
+import VisitModal from '../components/VisitModal';
+import RentSplitCalculator from '../components/RentSplitCalculator';
+import ReviewsList from '../components/ReviewsList';
+import StarRating from '../components/StarRating';
+import { useFavorites } from '../context/FavoritesContext';
+import { useToast } from '../context/ToastContext';
 import './ListingDetails.css';
 
 const ListingDetails = () => {
   const { id } = useParams();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [isSaved, setIsSaved] = useState(false);
-  const [actionNotice, setActionNotice] = useState(null);
+  const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
+
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { showSuccess, showInfo } = useToast();
 
   const listing = mockListings.find((item) => item.id === Number(id));
+  const isSaved = listing ? isFavorite(listing.id) : false;
+
+  // Filter reviews for this listing, fallback to general sample if none
+  const listingReviews = mockReviews.filter((r) => r.listingId === Number(id));
 
   // Similar listings from same area or other areas
   const similarListings = mockListings
@@ -231,17 +244,43 @@ const ListingDetails = () => {
               </div>
             </div>
           </section>
+
+          {/* Rent & Utilities Split Calculator Toggle */}
+          <div className="calculator-toggle-banner card">
+            <div className="calc-banner-left">
+              <span className="banner-icon">🧮</span>
+              <div>
+                <h3 className="banner-title">Planning to Share with Roommates?</h3>
+                <p className="banner-text">Calculate exact per-person share for rent, Titas gas, WASA, WiFi, and meal mess costs.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => setShowCalculator(!showCalculator)}
+            >
+              {showCalculator ? 'Hide Calculator' : 'Open Split Calculator'}
+            </button>
+          </div>
+
+          {/* Split Calculator Expanded */}
+          {showCalculator && (
+            <RentSplitCalculator
+              defaultRent={rent}
+              defaultService={serviceCharge}
+            />
+          )}
+
+          {/* Tenant Reviews & Ratings */}
+          <ReviewsList
+            listingId={listing.id}
+            initialReviews={listingReviews}
+          />
         </main>
 
         {/* Sidebar Sticky Actions Column */}
         <aside className="details-sidebar-column">
           <div className="pricing-action-card card">
-            {actionNotice && (
-              <div className="action-notice-box">
-                {actionNotice}
-              </div>
-            )}
-
             <div className="sidebar-rent-row">
               <div className="sidebar-rent">
                 <span className="currency">৳</span>
@@ -250,7 +289,7 @@ const ListingDetails = () => {
               </div>
               {rating && (
                 <div className="sidebar-rating">
-                  <span>★ {rating}</span>
+                  <StarRating rating={rating} size="sm" />
                   <span className="reviews-sub">({reviewsCount} reviews)</span>
                 </div>
               )}
@@ -276,7 +315,7 @@ const ListingDetails = () => {
               <button
                 type="button"
                 className="btn btn-primary btn-lg full-width"
-                onClick={() => handleActionClick('Schedule a Visit')}
+                onClick={() => setIsVisitModalOpen(true)}
               >
                 📅 Schedule a Free Visit
               </button>
@@ -284,7 +323,7 @@ const ListingDetails = () => {
               <button
                 type="button"
                 className="btn btn-secondary btn-lg full-width"
-                onClick={() => handleActionClick('Send Rent Request')}
+                onClick={() => showInfo('Rent request feature will connect with backend on Week 2 (Day 14).')}
               >
                 🏠 Send Rent Request
               </button>
@@ -292,9 +331,9 @@ const ListingDetails = () => {
               <button
                 type="button"
                 className={`btn btn-outline full-width save-btn ${isSaved ? 'saved' : ''}`}
-                onClick={() => setIsSaved(!isSaved)}
+                onClick={() => toggleFavorite(listing.id, title)}
               >
-                {isSaved ? '❤️ Saved to Favorites' : '🤍 Save Property'}
+                {isSaved ? '❤️ Saved in Favorites' : '🤍 Save Property'}
               </button>
             </div>
 
@@ -337,6 +376,16 @@ const ListingDetails = () => {
           </div>
         </section>
       )}
+
+      {/* Visit Scheduling Modal */}
+      <VisitModal
+        isOpen={isVisitModalOpen}
+        onClose={() => setIsVisitModalOpen(false)}
+        listing={listing}
+        onScheduled={(details) => {
+          showSuccess(`Visit booked for ${details.preferredDate} (${details.preferredTime})!`);
+        }}
+      />
     </div>
   );
 };

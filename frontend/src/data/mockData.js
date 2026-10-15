@@ -554,3 +554,298 @@ export const mockRoommates = [
   }
 ];
 
+// Current Demo Property Owner Profile
+export const defaultOwnerProfile = {
+  id: 101,
+  name: 'Engr. Mofazzal Hossain',
+  email: 'owner@homematch.bd',
+  phone: '01711223344',
+  role: 'owner',
+  isVerified: true,
+  memberSince: 'March 2024',
+  avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80',
+  propertiesCount: 3
+};
+
+// Mock Visit & Rent Requests for Property Owner
+export const mockRequests = [
+  {
+    id: 301,
+    type: 'visit',
+    listingId: 1,
+    listingTitle: 'Sunny 3-Bed Family/Bachelor Flat near Metro Station',
+    listingArea: 'Mirpur',
+    tenantName: 'Tanvir Ahmed',
+    tenantPhone: '01712345678',
+    tenantEmail: 'tanvir@homematch.bd',
+    tenantOccupation: 'CS Student @ NSU',
+    isTenantVerified: true,
+    targetDate: '2026-10-12',
+    preferredSlot: 'Afternoon (3:00 PM - 5:00 PM)',
+    message: 'Hello, I want to visit the flat with two of my university classmates. We are looking to move in next month.',
+    status: 'pending',
+    createdAt: '2026-10-08'
+  },
+  {
+    id: 302,
+    type: 'rent',
+    listingId: 1,
+    listingTitle: 'Sunny 3-Bed Family/Bachelor Flat near Metro Station',
+    listingArea: 'Mirpur',
+    tenantName: 'Sazzad Hossain',
+    tenantPhone: '01811223344',
+    tenantEmail: 'sazzad@bracu.ac.bd',
+    tenantOccupation: 'Student @ BRACU',
+    isTenantVerified: true,
+    offerRent: 22000,
+    message: 'We inspected the building and love the proximity to Metro Station. We are 3 bachelor students ready to pay 2 months advance.',
+    status: 'pending',
+    createdAt: '2026-10-07'
+  },
+  {
+    id: 303,
+    type: 'visit',
+    listingId: 1,
+    listingTitle: 'Sunny 3-Bed Family/Bachelor Flat near Metro Station',
+    listingArea: 'Mirpur',
+    tenantName: 'Mahir Faisal',
+    tenantPhone: '01999887766',
+    tenantEmail: 'mahir@brainstation-23.com',
+    tenantOccupation: 'Software Engineer',
+    isTenantVerified: true,
+    targetDate: '2026-10-14',
+    preferredSlot: 'Evening (6:00 PM - 8:00 PM)',
+    message: 'Interested in the bachelor flat. Available to visit after office hours.',
+    status: 'accepted',
+    createdAt: '2026-10-06'
+  },
+  {
+    id: 304,
+    type: 'rent',
+    listingId: 2,
+    listingTitle: 'Furnished Bachelor Room Sublet with Attached Balcony',
+    listingArea: 'Dhanmondi',
+    tenantName: 'Zubair Rahman',
+    tenantPhone: '01511223344',
+    tenantEmail: 'zubair@du.ac.bd',
+    tenantOccupation: 'Student @ DU',
+    isTenantVerified: false,
+    offerRent: 9000,
+    message: 'Looking for single sublet seat starting from November 1st.',
+    status: 'rejected',
+    createdAt: '2026-10-05'
+  }
+];
+
+// Mock Users for Admin Dashboard & Verification
+export const mockUsers = [
+  {
+    id: 1,
+    name: 'Tanvir Ahmed',
+    email: 'tanvir@homematch.bd',
+    phone: '01712345678',
+    role: 'tenant',
+    isVerified: true,
+    idType: 'Student ID',
+    idNumber: 'NSU-2121345',
+    university: 'North South University',
+    joinedAt: '2026-09-10',
+    status: 'active'
+  },
+  {
+    id: 2,
+    name: 'Engr. Mofazzal Hossain',
+    email: 'owner@homematch.bd',
+    phone: '01711223344',
+    role: 'owner',
+    isVerified: true,
+    idType: 'National ID (NID)',
+    idNumber: '19822692019482910',
+    joinedAt: '2026-08-15',
+    status: 'active'
+  },
+  {
+    id: 3,
+    name: 'Sazzad Hossain',
+    email: 'sazzad@bracu.ac.bd',
+    phone: '01811223344',
+    role: 'tenant',
+    isVerified: false,
+    idType: 'Student ID',
+    idNumber: 'BRACU-2030112',
+    university: 'BRAC University',
+    joinedAt: '2026-10-01',
+    status: 'active'
+  },
+  {
+    id: 4,
+    name: 'Kamrul Hasan',
+    email: 'kamrul@gmail.com',
+    phone: '01819876543',
+    role: 'owner',
+    isVerified: false,
+    idType: 'National ID (NID)',
+    idNumber: '19792695018371922',
+    joinedAt: '2026-10-03',
+    status: 'active'
+  },
+  {
+    id: 5,
+    name: 'Anika Tabassum',
+    email: 'anika@nsu.edu.bd',
+    phone: '01671122334',
+    role: 'tenant',
+    isVerified: true,
+    idType: 'Student ID',
+    idNumber: 'NSU-2210452',
+    university: 'North South University',
+    joinedAt: '2026-09-20',
+    status: 'active'
+  },
+  {
+    id: 6,
+    name: 'Abdul Malek',
+    email: 'malek.properties@yahoo.com',
+    phone: '01815544332',
+    role: 'owner',
+    isVerified: false,
+    idType: 'National ID (NID)',
+    idNumber: '19852619017264819',
+    joinedAt: '2026-10-04',
+    status: 'active'
+  }
+];
+
+// Mock Reports for Admin Handling
+export const mockReports = [
+  {
+    id: 401,
+    reportedType: 'listing',
+    targetId: 6,
+    targetTitle: 'Affordable 2-Bed Bachelor Mess Flat in Mohammadpur',
+    reporterName: 'Sazzad Hossain',
+    reporterEmail: 'sazzad@bracu.ac.bd',
+    reason: 'Misleading description',
+    details: 'The listing mentioned line gas available, but on visiting we found only empty cylinders and no gas connection.',
+    status: 'pending',
+    createdAt: '2026-10-08'
+  },
+  {
+    id: 402,
+    reportedType: 'user',
+    targetId: 4,
+    targetTitle: 'Kamrul Hasan (Owner)',
+    reporterName: 'Tanvir Ahmed',
+    reporterEmail: 'tanvir@homematch.bd',
+    reason: 'Unprofessional behavior / demanding middleman cash',
+    details: 'Owner asked for an extra Tk 2,000 cash upfront before allowing us to enter the flat for a scheduled visit.',
+    status: 'pending',
+    createdAt: '2026-10-07'
+  },
+  {
+    id: 403,
+    reportedType: 'listing',
+    targetId: 9,
+    targetTitle: 'Bachelor Sublet Room in Middle Badda',
+    reporterName: 'Mahir Faisal',
+    reporterEmail: 'mahir@brainstation-23.com',
+    reason: 'Outdated listing / Already rented',
+    details: 'Listing is still active on HomeMatch, but caretaker said it was rented 2 weeks ago.',
+    status: 'resolved',
+    createdAt: '2026-10-02'
+  }
+];
+
+// Mock Scraped Market Rent Data (Top 3 rental websites in Bangladesh: Bikroy, bdHousing, Rents.com.bd)
+export const mockMarketData = {
+  summary: {
+    totalScrapedListings: 1480,
+    cheapestArea: 'Badda (৳ 12,400)',
+    mostExpensiveArea: 'Gulshan (৳ 68,500)',
+    averageDhakaRent: 28400,
+    lastUpdated: 'October 10, 2026',
+    sources: ['Bikroy.com', 'bdHousing.com', 'Rents.com.bd']
+  },
+  avgRentByArea: {
+    labels: ['Mirpur', 'Dhanmondi', 'Uttara', 'Mohammadpur', 'Banani', 'Gulshan', 'Bashundhara', 'Badda', 'Rampura', 'Motijheel'],
+    data: [18500, 32000, 26500, 21000, 54000, 68500, 28000, 12400, 16800, 29000]
+  },
+  avgRentByBedrooms: {
+    labels: ['1 Bed / Sublet', '2 Bedrooms', '3 Bedrooms', '4+ Bedrooms'],
+    data: [9200, 18500, 28000, 52000]
+  },
+  websiteComparison: {
+    areas: ['Mirpur', 'Dhanmondi', 'Uttara', 'Banani'],
+    bikroy: [18000, 31500, 26000, 53000],
+    bdHousing: [19000, 32500, 27000, 55000],
+    rentsBd: [18500, 32000, 26500, 54000]
+  },
+  listingsPerWebsite: {
+    labels: ['Bikroy.com', 'bdHousing.com', 'Rents.com.bd'],
+    data: [620, 490, 370]
+  },
+  furnishedVsUnfurnished: {
+    labels: ['Fully Furnished', 'Semi-Furnished', 'Unfurnished'],
+    data: [310, 520, 650]
+  },
+  rentTrendOverTime: {
+    labels: ['May 2026', 'Jun 2026', 'Jul 2026', 'Aug 2026', 'Sep 2026', 'Oct 2026'],
+    data: [24200, 24800, 25500, 26100, 27200, 28400]
+  }
+};
+
+// Mock Reviews for Dhaka Properties and Owners
+export const mockReviews = [
+  {
+    id: 501,
+    listingId: 1,
+    userName: 'Tanvir Ahmed',
+    userRole: 'Student (BRACU)',
+    userAvatar: '👨‍🎓',
+    rating: 5,
+    date: 'October 4, 2026',
+    comment: 'Lived here for 8 months during semester. Very calm location near Mirpur-10 metro station. Landlord Rafiq uncle is very supportive and never bothers tenants unreasonably.',
+    pros: 'Near Metro, continuous line gas, friendly landlord',
+    cons: 'Night gate locks at 11:30 PM'
+  },
+  {
+    id: 502,
+    listingId: 1,
+    userName: 'Zubair Hossain',
+    userRole: 'Software Engineer',
+    userAvatar: '👨‍💻',
+    rating: 4,
+    date: 'September 18, 2026',
+    comment: 'Great internet connectivity and DESCO electricity rarely dropped. Clean stairs and lift always operational. Recommended for quiet bachelors.',
+    pros: 'Lift working 24/7, high speed fiber optic',
+    cons: 'Service charge went up slightly'
+  },
+  {
+    id: 503,
+    listingId: 2,
+    userName: 'Anika Tabassum',
+    userRole: 'Doctor (DMC)',
+    userAvatar: '👩‍⚕️',
+    rating: 5,
+    date: 'September 29, 2026',
+    comment: 'Super peaceful environment near Dhanmondi lake. Security guard is vigilant and family environment is top notch.',
+    pros: 'Lake view, safe parking, 24/7 generator backup',
+    cons: 'Rent is slightly on the higher side'
+  },
+  {
+    id: 504,
+    listingId: 4,
+    userName: 'Nabila Rahman',
+    userRole: 'NSU Student',
+    userAvatar: '👩‍🎓',
+    rating: 5,
+    date: 'October 1, 2026',
+    comment: 'Best female sublet in Bashundhara Block D. Safe biometric entry, clean kitchen, and walking distance to campus.',
+    pros: 'Biometric gate, zero brokerage, friendly flatmates',
+    cons: 'Visitor curfew applies'
+  }
+];
+
+
+
+

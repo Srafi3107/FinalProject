@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { mockRoommates, DHAKA_AREAS } from '../data/mockData';
 import RoommateCard from '../components/RoommateCard';
+import EmptyState from '../components/common/EmptyState';
 import './Roommates.css';
 
 const Roommates = () => {

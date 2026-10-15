@@ -13,6 +13,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import TenantDashboard from './pages/TenantDashboard';
 import OwnerDashboard from './pages/OwnerDashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -26,10 +28,13 @@ function App() {
           <Route path="/listings/:id" element={<ListingDetails />} />
           <Route path="/roommates" element={<Roommates />} />
           <Route path="/market" element={<MarketDashboard />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/dashboard" element={<TenantDashboard />} />
           <Route path="/profile" element={<TenantDashboard />} />
           <Route path="/owner-dashboard" element={<OwnerDashboard />} />
           <Route path="/owner" element={<OwnerDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
