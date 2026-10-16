@@ -1,0 +1,2 @@
+// Placeholder for future auth/listing/roommate controllers
+module.exports = {};
