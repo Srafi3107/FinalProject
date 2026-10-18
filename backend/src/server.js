@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const { testConnection } = require('./config/db');
 const healthRoutes = require('./routes/healthRoutes');
+const authRoutes = require('./routes/authRoutes');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 // Load environment variables from .env
@@ -31,6 +32,9 @@ app.get('/', (req, res) => {
 // Direct and API-prefixed health check routes
 app.use('/', healthRoutes); // Provides GET /health
 app.use('/api', healthRoutes); // Provides GET /api/health
+
+// Authentication routes
+app.use('/api/auth', authRoutes); // Provides /api/auth/register, /api/auth/login, /api/auth/me
 
 // 404 handler for undefined routes
 app.use(notFoundHandler);
