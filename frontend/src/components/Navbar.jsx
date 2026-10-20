@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
   const { favoritesCount } = useFavorites();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMenu = () => setMobileMenuOpen(false);
+
+  const handleLogout = () => {
+    closeMenu();
+    logout();
+    navigate('/');
+  };
 
   return (
     <header className="navbar-header">
@@ -81,42 +90,81 @@ const Navbar = () => {
               Market Trends
             </NavLink>
             <NavLink
-              to="/dashboard"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
               to="/favorites"
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Saved ❤️{favoritesCount > 0 && <span className="nav-badge-count">{favoritesCount}</span>}
             </NavLink>
-            <NavLink
-              to="/owner-dashboard"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Owner Portal
-            </NavLink>
-            <NavLink
-              to="/admin"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Admin Portal
-            </NavLink>
+
+            {/* Role-Specific Portal Links */}
+            {isAuthenticated && (user?.role === 'tenant' || user?.role === 'admin') && (
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={closeMenu}
+              >
+                Dashboard
+              </NavLink>
+            )}
+
+            {isAuthenticated && (user?.role === 'owner' || user?.role === 'admin') && (
+              <NavLink
+                to="/owner-dashboard"
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={closeMenu}
+              >
+                Owner Portal
+              </NavLink>
+            )}
+
+            {isAuthenticated && user?.role === 'admin' && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={closeMenu}
+              >
+                Admin Portal
+              </NavLink>
+            )}
           </div>
 
           <div className="nav-actions">
-            <Link to="/login" className="btn btn-ghost btn-sm" onClick={closeMenu}>
-              Sign In
-            </Link>
-            <Link to="/register" className="btn btn-primary btn-sm" onClick={closeMenu}>
-              Get Started
-            </Link>
+            {isAuthenticated && user ? (
+              /* Authenticated User Menu */
+              <div className="nav-user-profile">
+                <div className="user-info-chip" title={`${user.name} (${user.email})`}>
+                  <div className="user-avatar-badge">
+                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <div className="user-details">
+                    <span className="user-display-name">{user.name.split(' ')[0]}</span>
+                    <span className={`user-role-tag role-${user.role}`}>
+                      {user.role}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn btn-outline btn-sm logout-btn"
+                  onClick={handleLogout}
+                  title="Logout from session"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              /* Guest Actions */
+              <>
+                <Link to="/login" className="btn btn-ghost btn-sm" onClick={closeMenu}>
+                  Sign In
+                </Link>
+                <Link to="/register" className="btn btn-primary btn-sm" onClick={closeMenu}>
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </div>

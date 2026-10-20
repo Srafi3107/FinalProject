@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import './Auth.css';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [role, setRole] = useState('tenant'); // 'tenant' or 'owner'
   const [formData, setFormData] = useState({
     name: '',
@@ -74,7 +76,7 @@ const Register = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatusMessage(null);
     const formErrors = validate();
@@ -85,15 +87,35 @@ const Register = () => {
     }
 
     setIsSubmitting(true);
-    // Simulate user registration until connected with backend bcrypt + MySQL on Week 2
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const result = await register({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phone,
+      role
+    });
+
+    setIsSubmitting(false);
+
+    if (result.success) {
       setStatusMessage({
         type: 'success',
-        text: `Account created for ${formData.name} as ${role === 'tenant' ? 'Tenant' : 'Property Owner'}! Connecting to MySQL backend on Day 9.`
+        text: `Welcome ${formData.name}! Your account has been registered.`
       });
-      setTimeout(() => navigate('/login'), 1500);
-    }, 600);
+      // Redirect based on role
+      setTimeout(() => {
+        if (role === 'owner') {
+          navigate('/owner-dashboard');
+        } else {
+          navigate('/dashboard');
+        }
+      }, 1000);
+    } else {
+      setStatusMessage({
+        type: 'error',
+        text: result.message || 'Registration failed.'
+      });
+    }
   };
 
   return (

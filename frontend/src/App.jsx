@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 import Home from './pages/Home';
@@ -23,20 +24,71 @@ function App() {
       <Navbar />
       <main className="main-content">
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/listings/:id" element={<ListingDetails />} />
           <Route path="/roommates" element={<Roommates />} />
           <Route path="/market" element={<MarketDashboard />} />
           <Route path="/favorites" element={<Favorites />} />
-          <Route path="/dashboard" element={<TenantDashboard />} />
-          <Route path="/profile" element={<TenantDashboard />} />
-          <Route path="/owner-dashboard" element={<OwnerDashboard />} />
-          <Route path="/owner" element={<OwnerDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          {/* Protected Tenant Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['tenant', 'admin']}>
+                <TenantDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute allowedRoles={['tenant', 'admin']}>
+                <TenantDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protected Property Owner Routes */}
+          <Route
+            path="/owner-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['owner', 'admin']}>
+                <OwnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/owner"
+            element={
+              <ProtectedRoute allowedRoles={['owner', 'admin']}>
+                <OwnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protected Admin Routes */}
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 404 Catch-All */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

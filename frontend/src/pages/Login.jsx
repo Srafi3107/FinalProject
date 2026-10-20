@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, demoLogin } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -47,7 +49,7 @@ const Login = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatusMessage(null);
     const formErrors = validate();
@@ -58,15 +60,34 @@ const Login = () => {
     }
 
     setIsSubmitting(true);
-    // Simulate auth response until backend JWT endpoint connected on Week 2
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const result = await login({
+      email: formData.email,
+      password: formData.password
+    });
+
+    setIsSubmitting(false);
+
+    if (result.success) {
+      const userRole = result.user?.role;
       setStatusMessage({
         type: 'success',
-        text: 'Login validated! Backend JWT authentication connects on Day 9.'
+        text: `Welcome back, ${result.user?.name || 'User'}!`
       });
-      setTimeout(() => navigate('/'), 1500);
-    }, 600);
+      setTimeout(() => {
+        if (userRole === 'admin') {
+          navigate('/admin');
+        } else if (userRole === 'owner') {
+          navigate('/owner-dashboard');
+        } else {
+          navigate('/dashboard');
+        }
+      }, 700);
+    } else {
+      setStatusMessage({
+        type: 'error',
+        text: result.message || 'Login failed. Please check your credentials.'
+      });
+    }
   };
 
   // Quick helper for university viva test accounts
@@ -78,6 +99,13 @@ const Login = () => {
     });
     setErrors({});
     setStatusMessage(null);
+  };
+
+  const handleQuickDemo = (role) => {
+    const user = demoLogin(role);
+    if (role === 'admin') navigate('/admin');
+    else if (role === 'owner') navigate('/owner-dashboard');
+    else navigate('/dashboard');
   };
 
   return (
@@ -183,24 +211,32 @@ const Login = () => {
               <button
                 type="button"
                 className="demo-pill"
-                onClick={() => fillQuickAccount('tenant@homematch.bd', 'tenant123')}
+                onClick={() => fillQuickAccount('tanvir@homematch.bd', 'password123')}
+                title="Prefill Tanvir (Tenant)"
               >
-                👤 Tenant
+                👤 Tenant (tanvir@)
               </button>
               <button
                 type="button"
                 className="demo-pill"
-                onClick={() => fillQuickAccount('owner@homematch.bd', 'owner123')}
+                onClick={() => fillQuickAccount('mofazzal@gmail.com', 'password123')}
+                title="Prefill Mofazzal (Owner)"
               >
-                🏠 Owner
+                🏠 Owner (mofazzal@)
               </button>
               <button
                 type="button"
                 className="demo-pill"
-                onClick={() => fillQuickAccount('admin@homematch.bd', 'admin123')}
+                onClick={() => fillQuickAccount('admin@homematch.bd', 'password123')}
+                title="Prefill Admin"
               >
-                🛡️ Admin
+                🛡️ Admin (admin@)
               </button>
+            </div>
+            <div style={{ marginTop: '0.65rem', textAlign: 'center' }}>
+              <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
+                Offline Fallback: <button type="button" onClick={() => handleQuickDemo('tenant')} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.725rem' }}>1-Click Tenant</button> | <button type="button" onClick={() => handleQuickDemo('owner')} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.725rem' }}>Owner</button> | <button type="button" onClick={() => handleQuickDemo('admin')} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.725rem' }}>Admin</button>
+              </span>
             </div>
           </div>
 
