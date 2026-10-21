@@ -1,9 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const dotenv = require('dotenv');
 const { testConnection } = require('./config/db');
 const healthRoutes = require('./routes/healthRoutes');
 const authRoutes = require('./routes/authRoutes');
+const listingRoutes = require('./routes/listingRoutes');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 // Load environment variables from .env
@@ -20,6 +22,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve uploaded listing photos statically
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Root welcome endpoint
 app.get('/', (req, res) => {
   res.json({
@@ -33,8 +38,9 @@ app.get('/', (req, res) => {
 app.use('/', healthRoutes); // Provides GET /health
 app.use('/api', healthRoutes); // Provides GET /api/health
 
-// Authentication routes
-app.use('/api/auth', authRoutes); // Provides /api/auth/register, /api/auth/login, /api/auth/me
+// API Routes
+app.use('/api/auth', authRoutes); // Auth & Session endpoints
+app.use('/api/listings', listingRoutes); // Property Listings & Photo Upload endpoints
 
 // 404 handler for undefined routes
 app.use(notFoundHandler);
