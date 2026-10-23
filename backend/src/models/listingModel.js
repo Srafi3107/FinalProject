@@ -227,11 +227,163 @@ const updateListingStatus = async (id, status) => {
   return result.affectedRows > 0;
 };
 
+/**
+ * Search and filter listings with pagination
+ */
+const searchListings = async (filters = {}) => {
+  const {
+    area,
+    minRent,
+    maxRent,
+    bedrooms,
+    bathrooms,
+    furnished,
+    tenantType,
+    genderAllowed,
+    hasWifi,
+    hasGas,
+    hasLift,
+    search,
+    sortBy = 'newest',
+    page = 1,
+    limit = 12
+  } = filters;
+
+  const conditions = ['l.status = "available"', 'l.is_approved = TRUE'];
+  const params = [];
+
+  // Area filter
+  if (area && area !== 'all' && area.trim()) {
+    conditions.push('l.area = ?');
+    params.push(area.trim());
+  }
+
+  // Rent range
+  if (minRent !== undefined && !isNaN(Number(minRent))) {
+    conditions.push('l.rent >= ?');
+    params.push(Number(minRent));
+  }
+  if (maxRent !== undefined && !isNaN(Number(maxRent))) {
+    conditions.push('l.rent <= ?');
+    params.push(Number(maxRent));
+  }
+
+  // Bedrooms
+  if (bedrooms && bedrooms !== 'any') {
+    if (String(bedrooms) === '4+' || Number(bedrooms) >= 4) {
+      conditions.push('l.bedrooms >= 4');
+    } else {
+      conditions.push('l.bedrooms = ?');
+      params.push(Number(bedrooms));
+    }
+  }
+
+  // Bathrooms
+  if (bathrooms && bathrooms !== 'any') {
+    conditions.push('l.bathrooms >= ?');
+    params.push(Number(bathrooms));
+  }
+
+  // Furnished status
+  if (furnished && furnished !== 'any') {
+    conditions.push('l.furnished = ?');
+    params.push(furnished);
+  }
+
+  // Gender allowed
+  if (genderAllowed && genderAllowed !== 'any') {
+    conditions.push('(l.gender_allowed = ? OR l.gender_allowed = "any")');
+    params.push(genderAllowed);
+  }
+
+  // Tenant type (JSON search)
+  if (tenantType && tenantType !== 'any') {
+    conditions.push('JSON_CONTAINS(l.tenant_type, JSON_QUOTE(?))');
+    params.push(tenantType);
+  }
+
+  // Amenities
+  if (hasWifi === true || String(hasWifi) === 'true') {
+    conditions.push('l.has_wifi = TRUE');
+  }
+  if (hasGas === true || String(hasGas) === 'true') {
+    conditions.push('l.has_gas = TRUE');
+  }
+  if (hasLift === true || String(hasLift) === 'true') {
+    conditions.push('l.has_lift = TRUE');
+  }
+
+  // Free text search
+  if (search && search.trim()) {
+    conditions.push('(l.title LIKE ? OR l.address LIKE ? OR l.area LIKE ? OR l.description LIKE ?)');
+    const searchTerm = `%${search.trim()}%`;
+    params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  // Count total records for pagination
+  const [countResult] = await pool.query(
+    `SELECT COUNT(*) AS total FROM listings l ${whereClause}`,
+    params
+  );
+  const total = countResult[0].total;
+
+  // Sorting
+  let orderBy = 'l.created_at DESC';
+  if (sortBy === 'price-low') {
+    orderBy = 'l.rent ASC';
+  } else if (sortBy === 'price-high') {
+    orderBy = 'l.rent DESC';
+  } else if (sortBy === 'size-high') {
+    orderBy = 'l.size_sqft DESC';
+  } else if (sortBy === 'newest') {
+    orderBy = 'l.created_at DESC';
+  }
+
+  const parsedPage = Math.max(1, Number(page) || 1);
+  const parsedLimit = Math.max(1, Math.min(50, Number(limit) || 12));
+  const offset = (parsedPage - 1) * parsedLimit;
+
+  // Query records
+  const querySql = `
+    SELECT l.*,
+           u.name AS owner_name,
+           u.email AS owner_email,
+           u.phone AS owner_phone,
+           u.is_verified AS owner_is_verified,
+           (SELECT image_url FROM listing_images WHERE listing_id = l.id ORDER BY is_cover DESC, id ASC LIMIT 1) AS cover_image
+    FROM listings l
+    LEFT JOIN users u ON l.owner_id = u.id
+    ${whereClause}
+    ORDER BY ${orderBy}
+    LIMIT ? OFFSET ?
+  `;
+
+  const queryParams = [...params, parsedLimit, offset];
+  const [rows] = await pool.query(querySql, queryParams);
+
+  const listings = rows.map(r => formatListing(r));
+
+  return {
+    listings,
+    pagination: {
+      total,
+      page: parsedPage,
+      limit: parsedLimit,
+      totalPages: Math.ceil(total / parsedLimit),
+      hasNextPage: offset + rows.length < total,
+      hasPrevPage: parsedPage > 1
+    }
+  };
+};
+
 module.exports = {
   createListing,
   getListingById,
   getListingsByOwner,
   updateListing,
   deleteListing,
-  updateListingStatus
+  updateListingStatus,
+  searchListings
 };

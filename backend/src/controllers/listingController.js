@@ -276,7 +276,62 @@ const toggleListingStatus = async (req, res, next) => {
   }
 };
 
+/**
+ * @route   GET /api/listings
+ * @desc    Search and filter public property listings with pagination
+ * @access  Public
+ */
+const getListings = async (req, res, next) => {
+  try {
+    const {
+      area,
+      minRent,
+      maxRent,
+      bedrooms,
+      bathrooms,
+      furnished,
+      tenantType,
+      genderAllowed,
+      hasWifi,
+      hasGas,
+      hasLift,
+      search,
+      sortBy,
+      page,
+      limit
+    } = req.query;
+
+    const result = await listingModel.searchListings({
+      area,
+      minRent,
+      maxRent,
+      bedrooms,
+      bathrooms,
+      furnished,
+      tenantType,
+      genderAllowed,
+      hasWifi,
+      hasGas,
+      hasLift,
+      search,
+      sortBy,
+      page,
+      limit
+    });
+
+    res.status(200).json({
+      success: true,
+      count: result.listings.length,
+      pagination: result.pagination,
+      listings: result.listings
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
+  getListings,
   createListing,
   getMyListings,
   getListingById,
