@@ -1,9 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { mockListings, DHAKA_AREAS } from '../data/mockData';
+import { DHAKA_AREAS, mockListings } from '../data/mockData';
+import listingService from '../services/listingService';
 import ListingCard from '../components/ListingCard';
 import FilterSidebar from '../components/FilterSidebar';
 import EmptyState from '../components/common/EmptyState';
+import LoadingState from '../components/common/LoadingState';
 import './Listings.css';
 
 const Listings = () => {
@@ -17,6 +19,16 @@ const Listings = () => {
 
   // Sorting state
   const [sortBy, setSortBy] = useState('recommended');
+
+  // Listings data & state
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 12,
+    total: 0,
+    totalPages: 1
+  });
 
   // Filter state
   const [filters, setFilters] = useState({
@@ -51,6 +63,97 @@ const Listings = () => {
     }));
   }, [searchParams]);
 
+  // Load listings from Backend Search API (with automatic fallback to mock data)
+  const fetchListings = useCallback(async () => {
+    setLoading(true);
+    const queryParams = {
+      search: searchQuery || undefined,
+      area: filters.area || undefined,
+      maxRent: filters.maxRent < 60000 ? filters.maxRent : undefined,
+      bedrooms: filters.bedrooms !== 'any' ? filters.bedrooms : undefined,
+      tenantType: filters.tenantType !== 'any' ? filters.tenantType : undefined,
+      furnished: filters.furnished !== 'any' ? filters.furnished : undefined,
+      genderAllowed: filters.genderAllowed !== 'any' ? filters.genderAllowed : undefined,
+      hasWifi: filters.hasWifi || undefined,
+      hasGas: filters.hasGas || undefined,
+      hasLift: filters.hasLift || undefined,
+      sortBy,
+      page: pagination.page,
+      limit: pagination.limit
+    };
+
+    const res = await listingService.getListings(queryParams);
+
+    if (res.fromApi) {
+      setListings(res.listings);
+      if (res.pagination) {
+        setPagination(res.pagination);
+      }
+    } else {
+      // Fallback: client-side filter mock data
+      let filtered = [...mockListings];
+
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(
+          l => l.title.toLowerCase().includes(q) ||
+               l.area.toLowerCase().includes(q) ||
+               l.address.toLowerCase().includes(q)
+        );
+      }
+
+      if (filters.area) {
+        filtered = filtered.filter(l => l.area.toLowerCase() === filters.area.toLowerCase());
+      }
+
+      if (filters.maxRent < 60000) {
+        filtered = filtered.filter(l => l.rent <= filters.maxRent);
+      }
+
+      if (filters.bedrooms !== 'any') {
+        if (filters.bedrooms === '4+') filtered = filtered.filter(l => l.bedrooms >= 4);
+        else filtered = filtered.filter(l => l.bedrooms === Number(filters.bedrooms));
+      }
+
+      if (filters.tenantType !== 'any') {
+        filtered = filtered.filter(l => l.tenantType && l.tenantType.includes(filters.tenantType));
+      }
+
+      if (filters.furnished !== 'any') {
+        filtered = filtered.filter(l => l.furnished === filters.furnished);
+      }
+
+      if (filters.genderAllowed !== 'any') {
+        filtered = filtered.filter(l => l.genderAllowed === 'any' || l.genderAllowed === filters.genderAllowed);
+      }
+
+      if (filters.hasWifi) filtered = filtered.filter(l => l.hasWifi);
+      if (filters.hasGas) filtered = filtered.filter(l => l.hasGas);
+      if (filters.hasLift) filtered = filtered.filter(l => l.hasLift);
+      if (filters.onlyVerifiedOwners) filtered = filtered.filter(l => l.owner?.isVerified);
+
+      // Sorting
+      if (sortBy === 'price-low') filtered.sort((a, b) => a.rent - b.rent);
+      else if (sortBy === 'price-high') filtered.sort((a, b) => b.rent - a.rent);
+      else if (sortBy === 'rating') filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      else if (sortBy === 'newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setListings(filtered);
+      setPagination({
+        page: 1,
+        limit: 12,
+        total: filtered.length,
+        totalPages: 1
+      });
+    }
+
+    setLoading(false);
+  }, [searchQuery, filters, sortBy, pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    fetchListings();
+  }, [fetchListings]);
+
   // Handle resetting all filters
   const handleResetFilters = () => {
     setSearchQuery('');
@@ -69,88 +172,13 @@ const Listings = () => {
     setSearchParams({});
   };
 
-  // Quick area selection pill
-  const handleAreaPillClick = (area) => {
-    const newArea = filters.area === area ? '' : area;
-    setFilters((prev) => ({ ...prev, area: newArea }));
+  // Handle area chip click from hero
+  const handleAreaPillClick = (selectedArea) => {
+    setFilters((prev) => ({
+      ...prev,
+      area: prev.area === selectedArea ? '' : selectedArea
+    }));
   };
-
-  // Main Filtering Logic
-  const filteredListings = useMemo(() => {
-    return mockListings.filter((listing) => {
-      // 1. Text Search (title, description, address, area)
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase().trim();
-        const matchesTitle = listing.title.toLowerCase().includes(query);
-        const matchesDesc = listing.description.toLowerCase().includes(query);
-        const matchesArea = listing.area.toLowerCase().includes(query);
-        const matchesAddress = listing.address.toLowerCase().includes(query);
-        if (!matchesTitle && !matchesDesc && !matchesArea && !matchesAddress) {
-          return false;
-        }
-      }
-
-      // 2. Area Filter
-      if (filters.area && listing.area.toLowerCase() !== filters.area.toLowerCase()) {
-        return false;
-      }
-
-      // 3. Rent Range Filter
-      if (listing.rent > Number(filters.maxRent)) {
-        return false;
-      }
-
-      // 4. Bedrooms Filter
-      if (filters.bedrooms !== 'any') {
-        if (filters.bedrooms === '4+' && listing.bedrooms < 4) return false;
-        if (filters.bedrooms !== '4+' && listing.bedrooms !== Number(filters.bedrooms)) return false;
-      }
-
-      // 5. Tenant Type Filter
-      if (filters.tenantType !== 'any') {
-        if (!listing.tenantType.includes(filters.tenantType)) {
-          return false;
-        }
-      }
-
-      // 6. Furnished Status Filter
-      if (filters.furnished !== 'any' && listing.furnished !== filters.furnished) {
-        return false;
-      }
-
-      // 7. Gender Allowed Filter
-      if (filters.genderAllowed !== 'any') {
-        if (listing.genderAllowed !== 'any' && listing.genderAllowed !== filters.genderAllowed) {
-          return false;
-        }
-      }
-
-      // 8. Facilities (WiFi, Gas, Lift)
-      if (filters.hasWifi && !listing.hasWifi) return false;
-      if (filters.hasGas && !listing.hasGas) return false;
-      if (filters.hasLift && !listing.hasLift) return false;
-
-      // 9. Verified Owner Only
-      if (filters.onlyVerifiedOwners && !listing.owner?.isVerified) return false;
-
-      return true;
-    });
-  }, [searchQuery, filters]);
-
-  // Sorting Logic
-  const sortedListings = useMemo(() => {
-    const list = [...filteredListings];
-    if (sortBy === 'price-low') {
-      list.sort((a, b) => a.rent - b.rent);
-    } else if (sortBy === 'price-high') {
-      list.sort((a, b) => b.rent - a.rent);
-    } else if (sortBy === 'rating') {
-      list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    } else if (sortBy === 'newest') {
-      list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
-    return list;
-  }, [filteredListings, sortBy]);
 
   // Count active non-default filters for mobile badge
   const activeFiltersCount = useMemo(() => {
@@ -220,7 +248,7 @@ const Listings = () => {
           filters={filters}
           onFilterChange={setFilters}
           onResetFilters={handleResetFilters}
-          totalResults={sortedListings.length}
+          totalResults={listings.length}
           isOpen={isMobileFilterOpen}
           onClose={() => setIsMobileFilterOpen(false)}
         />
@@ -284,7 +312,7 @@ const Listings = () => {
           {/* Results Summary Bar */}
           <div className="results-summary">
             <span className="results-count">
-              Showing <strong>{sortedListings.length}</strong> of {mockListings.length} homes in Dhaka
+              Showing <strong>{listings.length}</strong> {pagination.total > 0 ? `of ${pagination.total}` : ''} homes in Dhaka
             </span>
             {activeFiltersCount > 0 && (
               <button
@@ -297,15 +325,16 @@ const Listings = () => {
             )}
           </div>
 
-          {/* Listings Grid */}
-          {sortedListings.length > 0 ? (
+          {/* Listings Grid / Loading / Empty */}
+          {loading ? (
+            <LoadingState message="Fetching live Dhaka apartments & sublets..." size="lg" />
+          ) : listings.length > 0 ? (
             <div className="listings-grid">
-              {sortedListings.map((listing) => (
+              {listings.map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
               ))}
             </div>
           ) : (
-            /* Reusable Empty State */
             <EmptyState
               icon="🏚️"
               title="No matching Dhaka listings found"
@@ -313,6 +342,31 @@ const Listings = () => {
               actionText="Reset All Filters"
               onAction={handleResetFilters}
             />
+          )}
+
+          {/* Pagination Controls */}
+          {pagination.totalPages > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginTop: '2rem' }}>
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                disabled={pagination.page <= 1}
+                onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
+              >
+                &larr; Previous Page
+              </button>
+              <span style={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                Page {pagination.page} of {pagination.totalPages}
+              </span>
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                disabled={pagination.page >= pagination.totalPages}
+                onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+              >
+                Next Page &rarr;
+              </button>
+            </div>
           )}
         </main>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DHAKA_AREAS } from '../../data/mockData';
+import listingService from '../../services/listingService';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
@@ -62,7 +63,7 @@ const EditListingModal = ({ listing, onSave, onClose }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title.trim()) {
       setErrors({ title: 'Title cannot be empty.' });
@@ -70,17 +71,51 @@ const EditListingModal = ({ listing, onSave, onClose }) => {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    const updatePayload = {
+      title: formData.title,
+      area: formData.area,
+      address: formData.address,
+      rent: Number(formData.rent),
+      serviceCharge: Number(formData.serviceCharge || formData.service_charge || 0),
+      bedrooms: Number(formData.bedrooms),
+      bathrooms: Number(formData.bathrooms),
+      sizeSqft: Number(formData.size || formData.size_sqft),
+      size: Number(formData.size || formData.size_sqft),
+      furnished: formData.furnished,
+      hasWifi: formData.hasWifi,
+      hasGas: formData.hasGas,
+      hasLift: formData.hasLift,
+      hasGenerator: formData.hasGenerator,
+      tenantType: formData.tenantType,
+      genderAllowed: formData.genderAllowed,
+      description: formData.description,
+      status: formData.status || (formData.isAvailable ? 'available' : 'rented'),
+      imageUrls: formData.images
+    };
+
+    try {
+      const res = await listingService.updateListing(listing.id, updatePayload);
       setIsSubmitting(false);
-      onSave({
-        ...formData,
-        rent: Number(formData.rent),
-        bedrooms: Number(formData.bedrooms),
-        bathrooms: Number(formData.bathrooms),
-        size: Number(formData.size)
-      });
-      onClose();
-    }, 400);
+      if (res.data?.success && res.data.listing) {
+        onSave(res.data.listing);
+        onClose();
+        return;
+      }
+    } catch (err) {
+      console.warn('[EditListingModal] API update failed or offline, updating local state:', err.message);
+    }
+
+    // Fallback: local state update
+    setIsSubmitting(false);
+    onSave({
+      ...formData,
+      rent: Number(formData.rent),
+      bedrooms: Number(formData.bedrooms),
+      bathrooms: Number(formData.bathrooms),
+      size: Number(formData.size)
+    });
+    onClose();
   };
 
   return (

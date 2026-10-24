@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DHAKA_AREAS } from '../../data/mockData';
+import listingService from '../../services/listingService';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
@@ -91,7 +92,7 @@ const AddListingForm = ({ onAddListing, onCancel }) => {
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formErrors = validate();
     if (Object.keys(formErrors).length > 0) {
@@ -100,22 +101,54 @@ const AddListingForm = ({ onAddListing, onCancel }) => {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    const payload = {
+      title: formData.title,
+      area: formData.area,
+      address: formData.address,
+      rent: Number(formData.rent),
+      serviceCharge: Number(formData.serviceCharge || 0),
+      bedrooms: Number(formData.bedrooms),
+      bathrooms: Number(formData.bathrooms),
+      sizeSqft: Number(formData.size),
+      size: Number(formData.size),
+      furnished: formData.furnished,
+      hasWifi: formData.hasWifi,
+      hasGas: formData.hasGas,
+      hasLift: formData.hasLift,
+      hasGenerator: formData.hasGenerator,
+      tenantType: formData.tenantType,
+      genderAllowed: formData.genderAllowed,
+      description: formData.description,
+      imageUrls: formData.images
+    };
+
+    try {
+      const res = await listingService.createListing(payload);
       setIsSubmitting(false);
-      onAddListing({
-        ...formData,
-        id: Date.now(),
-        rent: Number(formData.rent),
-        serviceCharge: Number(formData.serviceCharge || 0),
-        bedrooms: Number(formData.bedrooms),
-        bathrooms: Number(formData.bathrooms),
-        size: Number(formData.size),
-        isAvailable: true,
-        rating: 5.0,
-        reviewsCount: 1,
-        createdAt: new Date().toISOString().split('T')[0]
-      });
-    }, 500);
+      if (res.data?.success && res.data.listing) {
+        onAddListing(res.data.listing);
+        return;
+      }
+    } catch (err) {
+      console.warn('[AddListingForm] API failed or backend offline, falling back to local state:', err.message);
+    }
+
+    // Fallback: local state update
+    setIsSubmitting(false);
+    onAddListing({
+      ...formData,
+      id: Date.now(),
+      rent: Number(formData.rent),
+      serviceCharge: Number(formData.serviceCharge || 0),
+      bedrooms: Number(formData.bedrooms),
+      bathrooms: Number(formData.bathrooms),
+      size: Number(formData.size),
+      isAvailable: true,
+      rating: 5.0,
+      reviewsCount: 1,
+      createdAt: new Date().toISOString().split('T')[0]
+    });
   };
 
   return (

@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { mockListings, mockRequests, defaultOwnerProfile } from '../data/mockData';
+import listingService from '../services/listingService';
 import MyListingsTable from '../components/owner/MyListingsTable';
 import AddListingForm from '../components/owner/AddListingForm';
 import EditListingModal from '../components/owner/EditListingModal';
 import RequestsList from '../components/owner/RequestsList';
+import LoadingState from '../components/common/LoadingState';
 import './OwnerDashboard.css';
 
 const OwnerDashboard = () => {
   const [activeTab, setActiveTab] = useState('listings'); // 'listings', 'add', 'requests', 'profile'
-  // Owner's listings: filter by ownerId === 101 or default to first 3 mock listings
-  const [ownerListings, setOwnerListings] = useState(
-    mockListings.filter((l) => l.owner?.id === 101 || l.id <= 3)
-  );
+  const [ownerListings, setOwnerListings] = useState([]);
+  const [loadingListings, setLoadingListings] = useState(true);
   const [requests, setRequests] = useState(mockRequests);
   const [editingListing, setEditingListing] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
@@ -20,6 +20,18 @@ const OwnerDashboard = () => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
+
+  // Fetch owner listings from API (fallback to mock)
+  const fetchOwnerListings = useCallback(async () => {
+    setLoadingListings(true);
+    const res = await listingService.getMyListings();
+    setOwnerListings(res.listings);
+    setLoadingListings(false);
+  }, []);
+
+  useEffect(() => {
+    fetchOwnerListings();
+  }, [fetchOwnerListings]);
 
   // Add listing
   const handleAddListing = (newListing) => {
@@ -37,15 +49,29 @@ const OwnerDashboard = () => {
   };
 
   // Delete listing
-  const handleDeleteListing = (listingId) => {
+  const handleDeleteListing = async (listingId) => {
     if (window.confirm('Are you sure you want to delete this listing?')) {
+      try {
+        await listingService.deleteListing(listingId);
+      } catch (err) {
+        console.warn('[OwnerDashboard] Delete API call error or offline:', err.message);
+      }
       setOwnerListings((prev) => prev.filter((l) => l.id !== listingId));
       showToast(`Listing #${listingId} removed from HomeMatch.`);
     }
   };
 
   // Toggle Rented / Available (Task 7)
-  const handleToggleRented = (listingId) => {
+  const handleToggleRented = async (listingId) => {
+    const target = ownerListings.find(l => l.id === listingId);
+    const nextStatus = target?.isAvailable ? 'rented' : 'available';
+
+    try {
+      await listingService.toggleStatus(listingId, nextStatus);
+    } catch (err) {
+      console.warn('[OwnerDashboard] Toggle status API error or offline:', err.message);
+    }
+
     setOwnerListings((prev) =>
       prev.map((l) => {
         if (l.id === listingId) {
@@ -53,7 +79,7 @@ const OwnerDashboard = () => {
           showToast(
             `Listing #${listingId} marked as ${nextState ? 'Available' : 'Rented Out'}.`
           );
-          return { ...l, isAvailable: nextState };
+          return { ...l, isAvailable: nextState, status: nextStatus };
         }
         return l;
       })
@@ -175,13 +201,17 @@ const OwnerDashboard = () => {
         {/* Dynamic Main Views */}
         <main className="owner-main-content">
           {activeTab === 'listings' && (
-            <MyListingsTable
-              listings={ownerListings}
-              onEditListing={(listing) => setEditingListing(listing)}
-              onDeleteListing={handleDeleteListing}
-              onToggleRented={handleToggleRented}
-              onAddNewClick={() => setActiveTab('add')}
-            />
+            loadingListings ? (
+              <LoadingState message="Fetching your published Dhaka properties..." size="lg" />
+            ) : (
+              <MyListingsTable
+                listings={ownerListings}
+                onEditListing={(listing) => setEditingListing(listing)}
+                onDeleteListing={handleDeleteListing}
+                onToggleRented={handleToggleRented}
+                onAddNewClick={() => setActiveTab('add')}
+              />
+            )
           )}
 
           {activeTab === 'add' && (

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { mockListings, mockReviews } from '../data/mockData';
+import listingService from '../services/listingService';
 import ListingCard from '../components/ListingCard';
 import VisitModal from '../components/VisitModal';
 import RentSplitCalculator from '../components/RentSplitCalculator';
 import ReviewsList from '../components/ReviewsList';
 import StarRating from '../components/StarRating';
+import LoadingState from '../components/common/LoadingState';
 import { useFavorites } from '../context/FavoritesContext';
 import { useToast } from '../context/ToastContext';
 import './ListingDetails.css';
@@ -16,10 +18,27 @@ const ListingDetails = () => {
   const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
 
+  // Listing data fetched from API (fallback to mock)
+  const [listing, setListing] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const { isFavorite, toggleFavorite } = useFavorites();
   const { showSuccess, showInfo } = useToast();
 
-  const listing = mockListings.find((item) => item.id === Number(id));
+  useEffect(() => {
+    let isMounted = true;
+    const fetchListing = async () => {
+      setLoading(true);
+      const res = await listingService.getListingById(id);
+      if (isMounted) {
+        setListing(res.listing);
+        setLoading(false);
+      }
+    };
+    fetchListing();
+    return () => { isMounted = false; };
+  }, [id]);
+
   const isSaved = listing ? isFavorite(listing.id) : false;
 
   // Filter reviews for this listing, fallback to general sample if none
@@ -29,6 +48,14 @@ const ListingDetails = () => {
   const similarListings = mockListings
     .filter((item) => item.id !== Number(id) && (item.area === listing?.area || item.bedrooms === listing?.bedrooms))
     .slice(0, 2);
+
+  if (loading) {
+    return (
+      <div className="container" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <LoadingState message="Loading apartment details & photos..." size="lg" />
+      </div>
+    );
+  }
 
   if (!listing) {
     return (
