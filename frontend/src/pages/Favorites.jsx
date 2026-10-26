@@ -1,16 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { mockListings } from '../data/mockData';
 import { useFavorites } from '../context/FavoritesContext';
+import { favoriteService } from '../services/favoriteService';
 import ListingCard from '../components/ListingCard';
 import './Favorites.css';
 
 const Favorites = () => {
   const { favoriteIds, clearAllFavorites } = useFavorites();
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filterArea, setFilterArea] = useState('all');
 
-  // Filter listings by saved IDs
-  const savedListings = mockListings.filter((item) => favoriteIds.includes(item.id));
+  useEffect(() => {
+    let isMounted = true;
+    const loadSaved = async () => {
+      setLoading(true);
+      try {
+        const { favorites } = await favoriteService.getFavorites();
+        if (isMounted) {
+          if (favorites && favorites.length > 0) {
+            setListings(favorites);
+          } else {
+            // Fallback to filtering mock listings
+            setListings(mockListings.filter((item) => favoriteIds.includes(Number(item.id))));
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          setListings(mockListings.filter((item) => favoriteIds.includes(Number(item.id))));
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    loadSaved();
+    return () => { isMounted = false; };
+  }, [favoriteIds.length]);
+
+  // Filter listings by currently saved IDs
+  const savedListings = listings.filter((item) => favoriteIds.includes(Number(item.id)));
 
   // Area filter
   const displayedListings = savedListings.filter((item) => {
@@ -38,7 +68,12 @@ const Favorites = () => {
 
       {/* Main Content */}
       <div className="container favorites-content-container">
-        {savedListings.length > 0 ? (
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+            <div className="spinner" style={{ margin: '0 auto 1rem' }}></div>
+            <p className="text-muted">Loading your saved properties...</p>
+          </div>
+        ) : savedListings.length > 0 ? (
           <>
             {/* Control & Filter Row */}
             <div className="favorites-controls-bar card">

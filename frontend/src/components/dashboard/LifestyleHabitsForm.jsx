@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../common/Button';
 
 const LifestyleHabitsForm = ({ initialHabits, onSave }) => {
@@ -12,16 +12,33 @@ const LifestyleHabitsForm = ({ initialHabits, onSave }) => {
   });
 
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // Sync state if initialHabits loads asynchronously
+  useEffect(() => {
+    if (initialHabits) {
+      setHabits(initialHabits);
+    }
+  }, [initialHabits]);
 
   const handleSelect = (key, value) => {
     setHabits((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSave) onSave(habits);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    setSaving(true);
+    try {
+      if (onSave) {
+        await onSave(habits);
+      }
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3500);
+    } catch (err) {
+      console.error('Failed to save lifestyle habits:', err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -37,8 +54,8 @@ const LifestyleHabitsForm = ({ initialHabits, onSave }) => {
       </div>
 
       {savedSuccess && (
-        <div className="alert-success" style={{ padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem' }}>
-          ✓ Lifestyle habits updated! Compatible roommate recommendations recalculated.
+        <div className="alert-success" style={{ padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem', backgroundColor: '#e8f5e9', color: '#2e7d32', border: '1px solid #c8e6c9' }}>
+          ✓ Lifestyle habits updated in database! Compatible roommate recommendations recalculated.
         </div>
       )}
 
@@ -131,7 +148,7 @@ const LifestyleHabitsForm = ({ initialHabits, onSave }) => {
               <span className="weight-tag">Weight: 10%</span>
             </div>
             <select
-              value={habits.cookingFrequency}
+              value={habits.cookingFrequency || 'daily'}
               onChange={(e) => handleSelect('cookingFrequency', e.target.value)}
               className="form-select"
             >
@@ -144,7 +161,7 @@ const LifestyleHabitsForm = ({ initialHabits, onSave }) => {
           <div className="form-group">
             <label className="form-label">5. Outside Guests Policy</label>
             <select
-              value={habits.guestsPolicy}
+              value={habits.guestsPolicy || 'weekends_only'}
               onChange={(e) => handleSelect('guestsPolicy', e.target.value)}
               className="form-select"
             >
@@ -177,8 +194,8 @@ const LifestyleHabitsForm = ({ initialHabits, onSave }) => {
         </div>
 
         <div className="form-submit-row">
-          <Button type="submit" variant="primary" size="md">
-            Save Lifestyle Habits
+          <Button type="submit" variant="primary" size="md" disabled={saving}>
+            {saving ? 'Saving Habits...' : 'Save Lifestyle Habits'}
           </Button>
         </div>
       </form>

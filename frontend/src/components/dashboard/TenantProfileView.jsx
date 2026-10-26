@@ -15,8 +15,8 @@ const TenantProfileView = ({ profile, onSwitchTab }) => {
     lifestyleHabits = {}
   } = profile;
 
-  // Calculate profile completeness
-  const completenessScore = 90; // High score with all preferences filled
+  // Calculate profile completeness from backend or fallback
+  const completenessScore = profile.completeness !== undefined ? profile.completeness : 90;
 
   return (
     <div className="profile-view-stack">

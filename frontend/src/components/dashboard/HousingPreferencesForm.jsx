@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DHAKA_AREAS } from '../../data/mockData';
 import Button from '../common/Button';
 
@@ -15,13 +15,21 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
   });
 
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // Sync state if initialPreferences loads asynchronously
+  useEffect(() => {
+    if (initialPreferences) {
+      setFormData(initialPreferences);
+    }
+  }, [initialPreferences]);
 
   const toggleArea = (area) => {
     setFormData((prev) => {
-      const exists = prev.preferredAreas.includes(area);
+      const exists = prev.preferredAreas?.includes(area);
       const newAreas = exists
         ? prev.preferredAreas.filter((a) => a !== area)
-        : [...prev.preferredAreas, area];
+        : [...(prev.preferredAreas || []), area];
       return { ...prev, preferredAreas: newAreas };
     });
   };
@@ -34,11 +42,20 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSave) onSave(formData);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    setSaving(true);
+    try {
+      if (onSave) {
+        await onSave(formData);
+      }
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3500);
+    } catch (err) {
+      console.error('Failed to save housing preferences:', err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -54,8 +71,8 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
       </div>
 
       {savedSuccess && (
-        <div className="alert-success" style={{ padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem' }}>
-          ✓ Housing preferences saved successfully! AI house recommendations updated.
+        <div className="alert-success" style={{ padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem', backgroundColor: '#e8f5e9', color: '#2e7d32', border: '1px solid #c8e6c9' }}>
+          ✓ Housing preferences saved successfully to MySQL database! AI recommendations updated.
         </div>
       )}
 
@@ -64,7 +81,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
         <div className="form-group">
           <div className="label-row-between">
             <label className="form-label">Target Monthly Budget (BDT)</label>
-            <span className="badge badge-primary">৳ {Number(formData.targetBudget).toLocaleString()} / mo</span>
+            <span className="badge badge-primary">৳ {Number(formData.targetBudget || 15000).toLocaleString()} / mo</span>
           </div>
           <input
             type="range"
@@ -72,7 +89,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
             min="5000"
             max="50000"
             step="1000"
-            value={formData.targetBudget}
+            value={formData.targetBudget || 15000}
             onChange={handleInputChange}
             className="form-range-slider"
           />
@@ -89,7 +106,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
           </label>
           <div className="tags-select-grid">
             {DHAKA_AREAS.map((area) => {
-              const isSelected = formData.preferredAreas.includes(area);
+              const isSelected = formData.preferredAreas?.includes(area);
               return (
                 <button
                   key={area}
@@ -110,7 +127,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
             <label className="form-label">Accommodation Type</label>
             <select
               name="roomType"
-              value={formData.roomType}
+              value={formData.roomType || 'bachelor'}
               onChange={handleInputChange}
               className="form-select"
             >
@@ -124,7 +141,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
             <label className="form-label">Furnishing Status</label>
             <select
               name="furnished"
-              value={formData.furnished}
+              value={formData.furnished || 'Furnished'}
               onChange={handleInputChange}
               className="form-select"
             >
@@ -144,7 +161,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
               <input
                 type="checkbox"
                 name="wifiRequired"
-                checked={formData.wifiRequired}
+                checked={Boolean(formData.wifiRequired)}
                 onChange={handleInputChange}
               />
               <span>📶 WiFi Required</span>
@@ -154,7 +171,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
               <input
                 type="checkbox"
                 name="gasRequired"
-                checked={formData.gasRequired}
+                checked={Boolean(formData.gasRequired)}
                 onChange={handleInputChange}
               />
               <span>🔥 Gas Line/Supply</span>
@@ -164,7 +181,7 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
               <input
                 type="checkbox"
                 name="liftRequired"
-                checked={formData.liftRequired}
+                checked={Boolean(formData.liftRequired)}
                 onChange={handleInputChange}
               />
               <span>🛗 Lift / Elevator</span>
@@ -178,15 +195,15 @@ const HousingPreferencesForm = ({ initialPreferences, onSave }) => {
           <input
             type="date"
             name="moveInDate"
-            value={formData.moveInDate}
+            value={formData.moveInDate ? formData.moveInDate.split('T')[0] : '2026-11-01'}
             onChange={handleInputChange}
             className="form-input"
           />
         </div>
 
         <div className="form-submit-row">
-          <Button type="submit" variant="primary" size="md">
-            Save Housing Preferences
+          <Button type="submit" variant="primary" size="md" disabled={saving}>
+            {saving ? 'Saving Preferences...' : 'Save Housing Preferences'}
           </Button>
         </div>
       </form>
