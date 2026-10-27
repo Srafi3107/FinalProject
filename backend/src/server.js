@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const tenantRoutes = require('./routes/tenantRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
+const requestRoutes = require('./routes/requestRoutes');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 // Load environment variables from .env
@@ -45,6 +46,7 @@ app.use('/api/auth', authRoutes); // Auth & Session endpoints
 app.use('/api/listings', listingRoutes); // Property Listings & Photo Upload endpoints
 app.use('/api/tenant', tenantRoutes); // Tenant profile, housing preferences, lifestyle habits
 app.use('/api/favorites', favoriteRoutes); // Bookmarked properties
+app.use('/api/requests', requestRoutes); // Visit & rent inquiries and status management
 
 // 404 handler for undefined routes
 app.use(notFoundHandler);

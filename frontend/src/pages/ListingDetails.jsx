@@ -16,6 +16,7 @@ const ListingDetails = () => {
   const { id } = useParams();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
+  const [modalRequestType, setModalRequestType] = useState('visit');
   const [showCalculator, setShowCalculator] = useState(false);
 
   // Listing data fetched from API (fallback to mock)
@@ -342,7 +343,10 @@ const ListingDetails = () => {
               <button
                 type="button"
                 className="btn btn-primary btn-lg full-width"
-                onClick={() => setIsVisitModalOpen(true)}
+                onClick={() => {
+                  setModalRequestType('visit');
+                  setIsVisitModalOpen(true);
+                }}
               >
                 📅 Schedule a Free Visit
               </button>
@@ -350,7 +354,10 @@ const ListingDetails = () => {
               <button
                 type="button"
                 className="btn btn-secondary btn-lg full-width"
-                onClick={() => showInfo('Rent request feature will connect with backend on Week 2 (Day 14).')}
+                onClick={() => {
+                  setModalRequestType('rent');
+                  setIsVisitModalOpen(true);
+                }}
               >
                 🏠 Send Rent Request
               </button>
@@ -404,13 +411,18 @@ const ListingDetails = () => {
         </section>
       )}
 
-      {/* Visit Scheduling Modal */}
+      {/* Visit & Rent Scheduling Modal */}
       <VisitModal
         isOpen={isVisitModalOpen}
         onClose={() => setIsVisitModalOpen(false)}
         listing={listing}
+        initialType={modalRequestType}
         onScheduled={(details) => {
-          showSuccess(`Visit booked for ${details.preferredDate} (${details.preferredTime})!`);
+          if (details.type === 'rent') {
+            showSuccess(`Rent application submitted for ৳${Number(details.offerRent || listing.rent).toLocaleString()}/mo!`);
+          } else {
+            showSuccess(`Visit booked for ${details.targetDate} (${details.preferredSlot})!`);
+          }
         }}
       />
     </div>

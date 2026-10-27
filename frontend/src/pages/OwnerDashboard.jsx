@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { mockListings, mockRequests, defaultOwnerProfile } from '../data/mockData';
 import listingService from '../services/listingService';
+import requestService from '../services/requestService';
 import MyListingsTable from '../components/owner/MyListingsTable';
 import AddListingForm from '../components/owner/AddListingForm';
 import EditListingModal from '../components/owner/EditListingModal';
@@ -21,17 +22,23 @@ const OwnerDashboard = () => {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  // Fetch owner listings from API (fallback to mock)
-  const fetchOwnerListings = useCallback(async () => {
+  // Fetch owner listings & requests from API (fallback to mock)
+  const fetchOwnerData = useCallback(async () => {
     setLoadingListings(true);
-    const res = await listingService.getMyListings();
-    setOwnerListings(res.listings);
+    const [listingsRes, requestsRes] = await Promise.all([
+      listingService.getMyListings(),
+      requestService.getOwnerRequests()
+    ]);
+    setOwnerListings(listingsRes.listings);
+    if (requestsRes?.requests) {
+      setRequests(requestsRes.requests);
+    }
     setLoadingListings(false);
   }, []);
 
   useEffect(() => {
-    fetchOwnerListings();
-  }, [fetchOwnerListings]);
+    fetchOwnerData();
+  }, [fetchOwnerData]);
 
   // Add listing
   const handleAddListing = (newListing) => {
@@ -86,8 +93,9 @@ const OwnerDashboard = () => {
     );
   };
 
-  // Update request status
-  const handleUpdateRequestStatus = (requestId, newStatus) => {
+  // Update request status via API
+  const handleUpdateRequestStatus = async (requestId, newStatus) => {
+    await requestService.updateStatus(requestId, newStatus);
     setRequests((prev) =>
       prev.map((r) => (r.id === requestId ? { ...r, status: newStatus } : r))
     );

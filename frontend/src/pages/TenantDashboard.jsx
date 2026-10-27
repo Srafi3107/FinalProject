@@ -1,34 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { defaultTenantProfile } from '../data/mockData';
 import { tenantService } from '../services/tenantService';
+import requestService from '../services/requestService';
 import TenantProfileView from '../components/dashboard/TenantProfileView';
 import HousingPreferencesForm from '../components/dashboard/HousingPreferencesForm';
 import LifestyleHabitsForm from '../components/dashboard/LifestyleHabitsForm';
 import RecommendedHouses from '../components/dashboard/RecommendedHouses';
+import TenantRequestsList from '../components/dashboard/TenantRequestsList';
 import './TenantDashboard.css';
 
 const TenantDashboard = () => {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'houses', 'housing', 'lifestyle'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'houses', 'housing', 'lifestyle', 'requests'
   const [profile, setProfile] = useState(defaultTenantProfile);
+  const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch tenant profile on mount from backend API or cached mock
+  // Fetch tenant profile & outgoing requests on mount from backend API or cached mock
   useEffect(() => {
     let isMounted = true;
-    const fetchProfile = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const { profile: loadedProfile } = await tenantService.getProfile();
-        if (isMounted && loadedProfile) {
-          setProfile(loadedProfile);
+        const [profileRes, requestsRes] = await Promise.all([
+          tenantService.getProfile(),
+          requestService.getMyRequests()
+        ]);
+
+        if (isMounted) {
+          if (profileRes?.profile) {
+            setProfile(profileRes.profile);
+          }
+          if (requestsRes?.requests) {
+            setRequests(requestsRes.requests);
+          }
         }
       } catch (err) {
-        console.error('Failed to load profile in dashboard:', err);
+        console.error('Failed to load dashboard data:', err);
       } finally {
         if (isMounted) setLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchDashboardData();
     return () => { isMounted = false; };
   }, []);
 
@@ -56,8 +68,16 @@ const TenantDashboard = () => {
     }
   };
 
+  const handleCancelRequest = async (requestId) => {
+    await requestService.updateStatus(requestId, 'rejected');
+    setRequests((prev) =>
+      prev.map((r) => (r.id === requestId ? { ...r, status: 'rejected' } : r))
+    );
+  };
+
   const housingPrefs = profile.housingPreferences || defaultTenantProfile.housingPreferences;
   const lifestyleHabits = profile.lifestyleHabits || defaultTenantProfile.lifestyleHabits;
+  const pendingRequestsCount = requests.filter((r) => r.status === 'pending').length;
 
   return (
     <div className="dashboard-page">
@@ -87,8 +107,8 @@ const TenantDashboard = () => {
               <span className="stat-caption">Top Preferred Area</span>
             </div>
             <div className="quick-stat-box">
-              <span className="stat-value">{lifestyleHabits.cleanliness || 5}/5 ★</span>
-              <span className="stat-caption">Cleanliness Level</span>
+              <span className="stat-value">{requests.length} ({pendingRequestsCount} Pending)</span>
+              <span className="stat-caption">Visits &amp; Inquiries</span>
             </div>
           </div>
         </div>
@@ -136,6 +156,20 @@ const TenantDashboard = () => {
               <span className="nav-label">Lifestyle Habits</span>
               <span className="sidebar-badge">Weights</span>
             </button>
+
+            <button
+              type="button"
+              className={`sidebar-nav-item ${activeTab === 'requests' ? 'active' : ''}`}
+              onClick={() => setActiveTab('requests')}
+            >
+              <span className="nav-icon">📅</span>
+              <span className="nav-label">My Visit Requests</span>
+              {pendingRequestsCount > 0 && (
+                <span className="sidebar-badge" style={{ backgroundColor: '#f59e0b' }}>
+                  {pendingRequestsCount}
+                </span>
+              )}
+            </button>
           </div>
 
           <div className="sidebar-card-helper">
@@ -151,7 +185,7 @@ const TenantDashboard = () => {
           {loading ? (
             <div style={{ textAlign: 'center', padding: '3rem 0' }}>
               <div className="spinner" style={{ margin: '0 auto 1rem' }}></div>
-              <p className="text-muted">Loading your tenant profile &amp; preferences...</p>
+              <p className="text-muted">Loading your tenant profile &amp; inquiries...</p>
             </div>
           ) : (
             <>
@@ -179,6 +213,13 @@ const TenantDashboard = () => {
                 <LifestyleHabitsForm
                   initialHabits={lifestyleHabits}
                   onSave={handleUpdateLifestyle}
+                />
+              )}
+
+              {activeTab === 'requests' && (
+                <TenantRequestsList
+                  requests={requests}
+                  onCancelRequest={handleCancelRequest}
                 />
               )}
             </>

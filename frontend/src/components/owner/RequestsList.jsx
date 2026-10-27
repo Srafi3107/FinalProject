@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const RequestsList = ({ requests, onUpdateStatus }) => {
+const RequestsList = ({ requests = [], onUpdateStatus }) => {
   const [filterType, setFilterType] = useState('all'); // 'all', 'visit', 'rent'
   const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'pending', 'accepted', 'rejected'
   const [toastMessage, setToastMessage] = useState(null);
@@ -12,11 +12,13 @@ const RequestsList = ({ requests, onUpdateStatus }) => {
     return true;
   });
 
-  const handleStatusChange = (requestId, newStatus) => {
-    onUpdateStatus(requestId, newStatus);
+  const handleStatusChange = async (requestId, newStatus) => {
+    if (onUpdateStatus) {
+      await onUpdateStatus(requestId, newStatus);
+    }
     const label = newStatus === 'accepted' ? 'accepted' : 'declined';
-    setToastMessage(`Request #${requestId} has been marked as ${label}. Live backend syncs on Day 14.`);
-    setTimeout(() => setToastMessage(null), 3000);
+    setToastMessage(`Request #${requestId} has been marked as ${label} in database.`);
+    setTimeout(() => setToastMessage(null), 3500);
   };
 
   return (
@@ -32,7 +34,7 @@ const RequestsList = ({ requests, onUpdateStatus }) => {
       </div>
 
       {toastMessage && (
-        <div className="alert-success" style={{ padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem' }}>
+        <div className="alert-success" style={{ padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem', backgroundColor: '#e8f5e9', color: '#2e7d32', border: '1px solid #c8e6c9' }}>
           ✓ {toastMessage}
         </div>
       )}
@@ -88,7 +90,9 @@ const RequestsList = ({ requests, onUpdateStatus }) => {
                   <span className={`badge ${req.type === 'visit' ? 'badge-primary' : 'badge-secondary'}`}>
                     {req.type === 'visit' ? '📅 Property Visit Request' : '🏠 Rent Application'}
                   </span>
-                  <span className="req-date-meta">Received: {req.createdAt}</span>
+                  <span className="req-date-meta">
+                    Received: {req.createdAt ? (typeof req.createdAt === 'string' ? req.createdAt.split('T')[0] : req.createdAt) : 'Recently'}
+                  </span>
                 </div>
 
                 <div className="req-status-pill">
@@ -102,27 +106,27 @@ const RequestsList = ({ requests, onUpdateStatus }) => {
               <div className="req-property-meta">
                 <span className="req-prop-lbl">Property:</span>
                 <Link to={`/listings/${req.listingId}`} className="req-prop-link">
-                  {req.listingTitle} (📍 {req.listingArea})
+                  {req.listingTitle || 'Dhaka Flat'} {req.listingArea ? `(📍 ${req.listingArea})` : ''}
                 </Link>
               </div>
 
               {/* Tenant Profile Snippet */}
               <div className="req-tenant-snippet">
                 <div className="tenant-avatar-circle">
-                  {req.tenantName.charAt(0)}
+                  {(req.tenantName || 'Tenant').charAt(0)}
                 </div>
                 <div className="tenant-snippet-info">
                   <div className="tenant-name-row">
-                    <strong>{req.tenantName}</strong>
+                    <strong>{req.tenantName || 'Tenant'}</strong>
                     {req.isTenantVerified && (
                       <span className="badge badge-success badge-sm">✓ Verified ID</span>
                     )}
                   </div>
-                  <span className="tenant-occ">{req.tenantOccupation}</span>
+                  {req.tenantOccupation && <span className="tenant-occ">{req.tenantOccupation}</span>}
                   <div className="tenant-contacts-line">
-                    <span>📞 {req.tenantPhone}</span>
-                    <span>&bull;</span>
-                    <span>📧 {req.tenantEmail}</span>
+                    {req.tenantPhone && <span>📞 {req.tenantPhone}</span>}
+                    {req.tenantPhone && req.tenantEmail && <span>&bull;</span>}
+                    {req.tenantEmail && <span>📧 {req.tenantEmail}</span>}
                   </div>
                 </div>
               </div>
@@ -131,15 +135,17 @@ const RequestsList = ({ requests, onUpdateStatus }) => {
               <div className="req-details-box">
                 {req.type === 'visit' ? (
                   <div className="visit-schedule-line">
-                    <span>Target Visit Date: <strong>{req.targetDate}</strong></span>
-                    <span>Time Slot: <strong>{req.preferredSlot}</strong></span>
+                    <span>Target Visit Date: <strong>{req.targetDate ? req.targetDate.split('T')[0] : 'Flexible'}</strong></span>
+                    <span>Time Slot: <strong>{req.preferredSlot || 'Flexible'}</strong></span>
+                    {req.numberOfVisitors && <span>Visitors: <strong>{req.numberOfVisitors} person(s)</strong></span>}
                   </div>
                 ) : (
                   <div className="rent-offer-line">
-                    <span>Proposed Monthly Rent: <strong>৳ {req.offerRent?.toLocaleString()} / month</strong></span>
+                    <span>Proposed Monthly Rent: <strong>৳ {Number(req.offerRent || 0).toLocaleString()} / month</strong></span>
+                    {req.numberOfVisitors && <span>Occupants: <strong>{req.numberOfVisitors} person(s)</strong></span>}
                   </div>
                 )}
-                <p className="req-message-quote">"{req.message}"</p>
+                {req.message && <p className="req-message-quote">"{req.message}"</p>}
               </div>
 
               {/* Action Buttons */}
@@ -162,18 +168,16 @@ const RequestsList = ({ requests, onUpdateStatus }) => {
                     </button>
                   </div>
                 ) : (
-                  <div className="resolved-status-note">
-                    <span>
-                      This request has been <strong>{req.status}</strong>.
-                    </span>
-                    <button
-                      type="button"
-                      className="link-btn"
-                      onClick={() => handleStatusChange(req.id, 'pending')}
-                      style={{ marginLeft: '0.75rem', fontSize: '0.8rem' }}
-                    >
-                      Reset to Pending
-                    </button>
+                  <div className="resolved-action-info">
+                    {req.status === 'accepted' ? (
+                      <span className="text-success font-semibold">
+                        ✓ You accepted this request. Contact {req.tenantName || 'tenant'} to confirm key handover or visit.
+                      </span>
+                    ) : (
+                      <span className="text-muted">
+                        ✕ You declined this inquiry.
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
@@ -181,12 +185,10 @@ const RequestsList = ({ requests, onUpdateStatus }) => {
           ))}
         </div>
       ) : (
-        <div className="empty-requests-state">
-          <div className="empty-icon">📬</div>
-          <h3>No requests match your filter</h3>
-          <p>
-            When tenants in Dhaka send visit schedules or rent applications for your apartments, they will appear here.
-          </p>
+        <div className="empty-state-card">
+          <div className="empty-icon">📭</div>
+          <h3>No Requests in this category</h3>
+          <p>You do not have any pending visit or rent requests matching the filter.</p>
         </div>
       )}
     </div>
